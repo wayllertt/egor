@@ -126,7 +126,8 @@ fun DrawerItem(
         Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = text,
-            color = ItemTextTint,fontSize = 16.sp,
+            color = ItemTextTint,
+            fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.weight(1f)
         )

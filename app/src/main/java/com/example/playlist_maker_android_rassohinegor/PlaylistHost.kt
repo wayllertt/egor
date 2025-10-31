@@ -8,21 +8,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
 
 private fun singleTop() = navOptions { launchSingleTop = true }
-private fun singleTopPopToStart(startId: Int) = navOptions {
-    launchSingleTop = true
-    popUpTo(startId) { inclusive = false }
-}
 
 @Composable
 fun PlaylistHost(navController: NavHostController) {
-    val startId = navController.graph.startDestinationId
 
     val navigateUp = remember(navController) {
         { navController.navigateUp(); Unit }
-    }
-
-    val navigateToMain = remember(navController, startId) {
-        { navController.navigate(AppScreen.Main.route, singleTopPopToStart(startId)) }
     }
 
     val navigateToSearch = remember(navController) {

@@ -115,11 +115,16 @@ fun SettingsScreen(onBack: () -> Unit) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {Icon(Icons.Filled.ArrowBack, contentDescription = "Назад")
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Назад"
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = colorResource(id = R.color.white) )
+                    containerColor = colorResource(id = R.color.white)
+                )
 
             )
         }
