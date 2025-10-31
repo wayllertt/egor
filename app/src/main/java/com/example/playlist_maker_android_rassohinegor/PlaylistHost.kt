@@ -12,14 +12,10 @@ private fun singleTop() = navOptions { launchSingleTop = true }
 @Composable
 fun PlaylistHost(navController: NavHostController) {
 
-    val navigateUp = remember(navController) {
-        { navController.navigateUp(); Unit }
     }
-
     val navigateToSearch = remember(navController) {
         { navController.navigate(AppScreen.Search.route, singleTop()) }
     }
-
     val navigateToSettings = remember(navController) {
         { navController.navigate(AppScreen.Settings.route, singleTop()) }
     }
@@ -31,14 +27,7 @@ fun PlaylistHost(navController: NavHostController) {
         composable(AppScreen.Main.route) {
             MainScreen(
                 onOpenSearch = navigateToSearch,
-                onOpenSettings = navigateToSettings
             )
-        }
-        composable(AppScreen.Search.route) {
-            SearchScreen(onBack = navigateUp)
-        }
-        composable(AppScreen.Settings.route) {
-            SettingsScreen(onBack = navigateUp)
         }
     }
 }

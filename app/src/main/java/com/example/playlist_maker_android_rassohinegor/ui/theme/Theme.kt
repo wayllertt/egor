@@ -1,6 +1,5 @@
 package com.example.playlist_maker_android_rassohinegor.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
