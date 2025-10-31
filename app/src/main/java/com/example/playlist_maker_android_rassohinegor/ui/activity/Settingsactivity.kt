@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.example.playlist_maker_android_rassohinegor.R
 
 
-class SettingsActivity : ComponentActivity() {
+class Settingsactivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent { SettingsScreen(onBack = { finish() }) }

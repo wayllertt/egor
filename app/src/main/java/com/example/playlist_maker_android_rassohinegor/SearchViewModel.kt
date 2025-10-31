@@ -42,4 +42,18 @@ class SearchViewModel(
                 }
             }
     }
+
+    fun search(query: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (query.isBlank()) {
+                _allTracksScreenState.update { SearchState.Initial } // или пустой список
+                return@launch
+            }
+            _allTracksScreenState.update { SearchState.Loading }
+            runCatching { tracksRepository.searchTracks(query) }
+                .onSuccess { list -> _allTracksScreenState.update { SearchState.Success(list) } }
+                .onFailure { e -> _allTracksScreenState.update { SearchState.Error(e.message.orEmpty()) } }
+        }
+    }
+
 }

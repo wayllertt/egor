@@ -1,6 +1,7 @@
 package com.example.playlist_maker_android_rassohinegor.creator
 
 import com.example.playlist_maker_android_rassohinegor.data.dto.TrackDto
+import java.util.Locale
 
 class Storage {
     private val listTracks = listOf(
@@ -16,6 +17,18 @@ class Storage {
         TrackDto("Чёрный бумер", "Серега", 241_000),
     )
 
-    fun search(request: String): List<TrackDto> =
-        listTracks.filter { it.trackName.lowercase().contains(request.lowercase()) }
+    fun search(request: String): List<TrackDto> {
+        val q = request.trim().lowercase(Locale.getDefault())
+        if (q.isEmpty()) return listTracks
+
+        return listTracks.filter { dto ->
+            // сравниваем в ЛОКАЛИ и по началу названия
+            val name = dto.trackName.lowercase(Locale.getDefault())
+            // если хочешь «по вхождению», замени startsWith на contains
+            name.startsWith(q)
+                    // + ещё ищем по каждому слову в названии (начало любого слова):
+                    || name.split(' ', '-', '—', ':', '(', ')')
+                .any { it.startsWith(q) }
+        }
+    }
 }

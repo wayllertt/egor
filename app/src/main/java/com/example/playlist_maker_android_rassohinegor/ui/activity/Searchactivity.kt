@@ -35,6 +35,7 @@ class Searchactivity : ComponentActivity() {
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
@@ -89,7 +90,10 @@ fun SearchScreen(
                             contentDescription = "Очистить",
                             modifier = Modifier
                                 .size(20.dp)
-                                .clickable { query = "" }
+                                .clickable {
+                                    query = ""
+                                    onSearch("")
+                                }
                         )
                     }
                 },
