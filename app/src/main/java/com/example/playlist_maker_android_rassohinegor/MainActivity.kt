@@ -1,84 +1,106 @@
 package com.example.playlist_maker_android_rassohinegor
 
-import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.ui.unit.dp
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.foundation.background
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.material3.Text
-import androidx.compose.foundation.layout.*
-import androidx.compose.ui.graphics.Color
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.ui.Alignment
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.material.icons.Icons
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.clickable
-import androidx.compose.material3.Icon
-import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import android.widget.Toast
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
+
+private val BgPage = Color(0xFFF9F9F9)
+private val BgHeader = Color(0xFF3D6EFF)
+private val ItemIconTint = Color.Black.copy(alpha = 0.85f)
+private val ItemTextTint = Color.Black.copy(alpha = 0.9f)
+private val HeaderCorner = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainScreen()
-            }
+            val navController = rememberNavController()
+            PlaylistHost(navController = navController)
         }
+    }
+}
 
-    @Preview
-    @Composable
-    fun MainScreen() {
+private data class MenuItemSpec(
+    val icon: ImageVector,
+    val title: String,
+    val onClick: () -> Unit
+)
 
-        val context = LocalContext.current
+@Composable
+fun MainScreen(
+    onOpenSearch: () -> Unit,
+    onOpenSettings: () -> Unit
+) {
+    val context = LocalContext.current
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFFF9F9F9))
+    val items = listOf(
+        MenuItemSpec(Icons.Default.Search, "Поиск") { onOpenSearch() },
+        MenuItemSpec(Icons.Default.PlayArrow, "Плейлисты") {
+            Toast.makeText(context, "Кнопка нажата", Toast.LENGTH_SHORT).show()
+        },
+        MenuItemSpec(Icons.Default.FavoriteBorder, "Избранное") {
+            Toast.makeText(context, "Кнопка нажата", Toast.LENGTH_SHORT).show()
+        },
+        MenuItemSpec(Icons.Default.Settings, "Настройки") { onOpenSettings() }
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(BgPage)
+    ) {
+        MainHeader()
+        Spacer(Modifier.height(10.dp))
+
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(vertical = 6.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color(0xFF3D6EFF), RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp))
-                    .padding(vertical = 20.dp, horizontal = 16.dp)
-            ) {
-                Text(
-                    text = "Playlist maker",
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
+            items(items) { item ->
+                DrawerItem(icon = item.icon, text = item.title, onClick = item.onClick)
             }
-
-            DrawerItem(icon = Icons.Default.Search, text = "Поиск") {
-                val intent = Intent(context, Searchactivity::class.java)
-                context.startActivity(intent)
-            }
-            DrawerItem(icon = Icons.Default.PlayArrow, text = "Плейлисты") {
-                Toast.makeText(context, "Нажато", Toast.LENGTH_LONG).show()
-            }
-            DrawerItem(icon = Icons.Default.FavoriteBorder, text = "Избранное") {
-                Toast.makeText(context, "Нажато", Toast.LENGTH_SHORT).show()
-            }
-            DrawerItem(icon = Icons.Default.Settings, text = "Настройки") {
-                val intent = Intent(context, Settingsactivity::class.java)
-                context.startActivity(intent)
-            }
-
         }
+    }
+}
+
+@Composable
+private fun MainHeader() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(BgHeader, HeaderCorner)
+            .padding(vertical = 20.dp, horizontal = 16.dp)
+    ) {
+        Text(
+            text = "Playlist maker",
+            color = Color.White,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 
@@ -90,24 +112,23 @@ fun DrawerItem(
 ) {
     Row(
         modifier = Modifier
-            .clickable { onClick?.invoke() }
             .fillMaxWidth()
+            .clickable { onClick?.invoke() }
             .padding(horizontal = 16.dp, vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = Color.Black.copy(alpha = 0.85f),
+            tint = ItemIconTint,
             modifier = Modifier.size(22.dp)
         )
-
+        Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = text,
-            color = Color.Black.copy(alpha = 0.9f),
-            fontSize = 16.sp,
+            color = ItemTextTint,fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
+            modifier = Modifier.weight(1f)
         )
-
     }
 }

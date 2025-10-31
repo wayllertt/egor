@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">playlist-maker-android-RassohinEgor</string>
+
+    <string name="settings_title">Настройки</string>
+    <string name="btn_share_app">Поделиться приложением</string>
+    <string name="btn_write_to_devs">Написать в поддержку</string>
+    <string name="btn_user_agreement">Пользовательское соглашение</string>
+
+    <string name="share_text">Попробуй Playlist Maker — отличное приложение для музыки!</string>
+    <string name="share_chooser_title">Поделиться через...</string>
+    <string name="dev_email_to">rassokhin.e.s@edu.mirea.ru</string>
+    <string name="dev_email_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="dev_email_body">Спасибо!</string>
+    <string name="offer_url">https://practicum.yandex.ru/legal/offer/</string>
+
+    <string name="no_apps_found">Не найдено подходящих приложений</string>
+    <string name="no_mail_clients">Не найден почтовый клиент</string>
+    <string name="no_browser_found">Не найден браузер</string>
 </resources>
