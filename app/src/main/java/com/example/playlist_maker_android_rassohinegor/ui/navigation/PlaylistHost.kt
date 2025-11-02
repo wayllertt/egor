@@ -1,4 +1,4 @@
-package com.example.playlist_maker_android_rassohinegor
+package com.example.playlist_maker_android_rassohinegor.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember

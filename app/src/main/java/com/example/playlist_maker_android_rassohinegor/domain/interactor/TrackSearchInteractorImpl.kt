@@ -1,15 +1,27 @@
-package com.example.playlist_maker_android_rassohinegor.domain.interactor
+package com.example.playlist_maker_android_rassohinegor.data.repository
 
-import com.example.playlist_maker_android_rassohinegor.domain.model.Track
-import com.example.playlist_maker_android_rassohinegor.domain.repository.TracksRepository
+import com.example.playlist_maker_android_rassohinegor.data.network.request.TracksSearchRequest
+import com.example.playlist_maker_android_rassohinegor.data.network.response.TracksSearchResponse
+import com.example.playlist_maker_android_rassohinegor.domain.api.NetworkClient
+import com.example.playlist_maker_android_rassohinegor.domain.api.TracksRepository
+import com.example.playlist_maker_android_rassohinegor.domain.models.Track
+import kotlinx.coroutines.delay
 
-class TrackSearchInteractorImpl(
-    private val repository: TracksRepository
-) : TrackSearchInteractor {
+class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
 
-    override suspend fun getAllTracks(): List<Track> =
-        repository.searchTracks(expression = "")
-
-    override suspend fun searchTracks(expression: String): List<Track> =
-        repository.searchTracks(expression)
+    override suspend fun searchTracks(expression: String): List<Track> {
+        val response = networkClient.doRequest(TracksSearchRequest(expression))
+        delay(1_000)
+        return if (response.resultCode == 200) {
+            (response as TracksSearchResponse).results.map { trackDto ->
+                val totalSeconds = trackDto.trackTimeMillis / 1_000
+                val minutes = totalSeconds / 60
+                val seconds = totalSeconds % 60
+                val trackTime = "%02d:%02d".format(minutes, seconds)
+                Track(trackDto.trackName, trackDto.artistName, trackTime)
+            }
+        } else {
+            emptyList()
+        }
+    }
 }

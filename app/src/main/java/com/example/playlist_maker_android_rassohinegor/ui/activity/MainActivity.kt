@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.navigation.compose.rememberNavController
-import com.example.playlist_maker_android_rassohinegor.PlaylistHost
+import com.example.playlist_maker_android_rassohinegor.ui.navigation.PlaylistHost
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

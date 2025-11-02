@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.input.ImeAction
+import com.example.playlist_maker_android_rassohinegor.R
 
 
 class Searchactivity : ComponentActivity() {
@@ -34,7 +35,6 @@ class Searchactivity : ComponentActivity() {
         }
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

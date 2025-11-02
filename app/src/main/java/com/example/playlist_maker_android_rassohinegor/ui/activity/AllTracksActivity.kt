@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.example.playlist_maker_android_rassohinegor.SearchViewModel
 import com.example.playlist_maker_android_rassohinegor.ui.tracks.AllTracksScreen
 
 class AllTracksActivity : ComponentActivity() {

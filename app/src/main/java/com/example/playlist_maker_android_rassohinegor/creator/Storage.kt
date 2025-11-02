@@ -1,34 +1,66 @@
 package com.example.playlist_maker_android_rassohinegor.creator
 
 import com.example.playlist_maker_android_rassohinegor.data.dto.TrackDto
-import java.util.Locale
 
 class Storage {
     private val listTracks = listOf(
-        TrackDto("Владивосток 2000", "Мумий Троль", 158_000),
-        TrackDto("Группа крови", "Кино", 283_000),
-        TrackDto("Не смотри назад", "Ария", 312_000),
-        TrackDto("Звезда по имени Солнце", "Кино", 225_000),
-        TrackDto("Лондон", "Аквариум", 272_000),
-        TrackDto("На заре", "Альянс", 230_000),
-        TrackDto("Перемен", "Кино", 296_000),
-        TrackDto("Розовый фламинго", "Сплин", 195_000),
-        TrackDto("Танцевать", "Мельница", 222_000),
-        TrackDto("Чёрный бумер", "Серега", 241_000),
+        TrackDto(
+            trackName = "Владивосток 2000",
+            artistName = "Мумий Троль",
+            trackTimeMillis = 158_000
+        ),
+        TrackDto(
+            trackName = "Группа крови",
+            artistName = "Кино",
+            trackTimeMillis = 283_000
+        ),
+        TrackDto(
+            trackName = "Не смотри назад",
+            artistName = "Ария",
+            trackTimeMillis = 312_000
+        ),
+        TrackDto(
+            trackName = "Звезда по имени Солнце",
+            artistName = "Кино",
+            trackTimeMillis = 225_000
+        ),
+        TrackDto(
+            trackName = "Лондон",
+            artistName = "Аквариум",
+            trackTimeMillis = 272_000
+        ),
+        TrackDto(
+            trackName = "На заре",
+            artistName = "Альянс",
+            trackTimeMillis = 230_000
+        ),
+        TrackDto(
+            trackName = "Перемен",
+            artistName = "Кино",
+            trackTimeMillis = 296_000
+        ),
+        TrackDto(
+            trackName = "Розовый фламинго",
+            artistName = "Сплин",
+            trackTimeMillis = 195_000
+        ),
+        TrackDto(
+            trackName = "Танцевать",
+            artistName = "Мельница",
+            trackTimeMillis = 222_000
+        ),
+        TrackDto(
+            trackName = "Чёрный бумер",
+            artistName = "Серега",
+            trackTimeMillis = 241_000
+        )
     )
 
     fun search(request: String): List<TrackDto> {
-        val q = request.trim().lowercase(Locale.getDefault())
-        if (q.isEmpty()) return listTracks
-
-        return listTracks.filter { dto ->
-            // сравниваем в ЛОКАЛИ и по началу названия
-            val name = dto.trackName.lowercase(Locale.getDefault())
-            // если хочешь «по вхождению», замени startsWith на contains
-            name.startsWith(q)
-                    // + ещё ищем по каждому слову в названии (начало любого слова):
-                    || name.split(' ', '-', '—', ':', '(', ')')
-                .any { it.startsWith(q) }
+        return listTracks.filter {
+            it.trackName
+                .lowercase()
+                .contains(request.lowercase())
         }
     }
 }
