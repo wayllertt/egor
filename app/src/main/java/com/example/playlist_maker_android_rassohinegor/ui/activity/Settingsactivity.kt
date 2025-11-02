@@ -28,7 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.playlist_maker_android_rassohinegor.R
-import com.example.playlist_maker_android_rassohinegor.R
 
 class Settingsactivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

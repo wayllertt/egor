@@ -10,26 +10,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.example.playlist_maker_android_rassohinegor.ui.tracks.AllTracksScreen
-
-class AllTracksActivity : ComponentActivity() {
-
-    private val viewModel by viewModels<SearchViewModel> {
-        SearchViewModel.Companion.getViewModelFactory()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            MaterialTheme {
-                Scaffold(modifier = Modifier.Companion.fillMaxSize()) { innerPadding ->
-                    AllTracksScreen(
-                        modifier = Modifier.Companion.padding(innerPadding),
-                        viewModel = viewModel
-                    )
-                }
-            }
-        }
-    }
-}
+//import com.example.playlist_maker_android_rassohinegor.ui.tracks.AllTracksScreen
+//
+//class AllTracksActivity : ComponentActivity() {
+//
+//    private val viewModel by viewModels<SearchViewModel> {
+//        SearchViewModel.Companion.getViewModelFactory()
+//    }
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        enableEdgeToEdge()
+//        setContent {
+//            MaterialTheme {
+//                Scaffold(modifier = Modifier.Companion.fillMaxSize()) { innerPadding ->
+//                    AllTracksScreen(
+//                        modifier = Modifier.Companion.padding(innerPadding),
+//                        viewModel = viewModel
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
