@@ -58,9 +58,7 @@ fun MainScreen(
         // Пункты меню
         DrawerItem(icon = Icons.Default.Search, text = "Поиск") { onOpenSearch() }
         DrawerItem(icon = Icons.Default.PlayArrow, text = "Плейлисты") { onOpenTracks() }
-        DrawerItem(icon = Icons.Default.FavoriteBorder, text = "Избранное") {
-            Toast.makeText(context, "Кнопка нажата", Toast.LENGTH_SHORT).show()
-        }
+        DrawerItem(icon = Icons.Default.FavoriteBorder, text = "Избранное") {}
         DrawerItem(icon = Icons.Default.Settings, text = "Настройки") { onOpenSettings() }
     }
 }

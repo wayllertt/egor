@@ -9,7 +9,7 @@ import androidx.navigation.navOptions
 import com.example.playlist_maker_android_rassohinegor.ui.MainScreen
 import com.example.playlist_maker_android_rassohinegor.ui.activity.SearchScreen
 import com.example.playlist_maker_android_rassohinegor.ui.activity.SettingsScreen
-import com.example.playlist_maker_android_rassohinegor.ui.tracks.AllTracksScreen
+//import com.example.playlist_maker_android_rassohinegor.ui.tracks.AllTracksScreen
 
 private fun singleTop() = navOptions { launchSingleTop = true }
 
@@ -20,7 +20,6 @@ fun PlaylistHost(navController: NavHostController) {
 
     val navigateToMain = remember(navController) {
         {
-            // вернёмся к Main, если он в стеке, иначе просто перейдём
             navController.popBackStack(route = AppScreen.Main.route, inclusive = false)
             navController.navigate(AppScreen.Main.route, singleTop())
         }
@@ -31,9 +30,6 @@ fun PlaylistHost(navController: NavHostController) {
     val navigateToSettings = remember(navController) {
         { navController.navigate(AppScreen.Settings.route, singleTop()) }
     }
-    val navigateToTracks = remember(navController) {
-        { navController.navigate(AppScreen.Tracks.route, singleTop()) }
-    }
 
     NavHost(
         navController = navController,
@@ -43,11 +39,9 @@ fun PlaylistHost(navController: NavHostController) {
             MainScreen(
                 onOpenSearch = navigateToSearch,
                 onOpenSettings = navigateToSettings,
-                onOpenTracks = navigateToTracks
             )
         }
         composable(AppScreen.Search.route) { SearchScreen(onBack = navigateUp) }
         composable(AppScreen.Settings.route) { SettingsScreen(onBack = navigateUp) }
-        composable(AppScreen.Tracks.route) { AllTracksScreen() }
     }
 }

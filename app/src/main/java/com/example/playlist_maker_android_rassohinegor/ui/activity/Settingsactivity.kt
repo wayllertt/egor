@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -29,10 +30,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.playlist_maker_android_rassohinegor.R
 
-class Settingsactivity : ComponentActivity() {
+class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { SettingsScreen(onBack = { finish() }) }
+        setContent {
+            SettingsScreen(onBack = { finish() })
+        }
     }
 }
 
@@ -41,67 +44,10 @@ class Settingsactivity : ComponentActivity() {
 fun SettingsScreen(onBack: () -> Unit) {
     val context = LocalContext.current
 
-    val shareText = stringResource(R.string.share_text)
     val emailTo = stringResource(R.string.dev_email_to)
     val emailSubject = stringResource(R.string.dev_email_subject)
     val emailBody = stringResource(R.string.dev_email_body)
     val offerUrl = stringResource(R.string.offer_url)
-
-    val onShare = remember {
-        {
-            val send = Intent(Intent.ACTION_SEND).apply {
-                type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, shareText)
-            }
-            val chooser = Intent.createChooser(
-                send,
-                context.getString(R.string.share_chooser_title)
-            )
-            try {
-                context.startActivity(chooser)
-            } catch (_: ActivityNotFoundException) {
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.no_apps_found),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
-
-    val onWriteToDevs = remember {
-        {
-            val mailUri = Uri.parse("mailto:$emailTo")
-            val emailIntent = Intent(Intent.ACTION_SENDTO, mailUri).apply {
-                putExtra(Intent.EXTRA_SUBJECT, emailSubject)
-                putExtra(Intent.EXTRA_TEXT, emailBody)
-            }
-            try {
-                context.startActivity(emailIntent)
-            } catch (_: ActivityNotFoundException) {
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.no_mail_clients),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
-
-    val onOpenOffer = remember {
-        {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(offerUrl))
-            try {
-                context.startActivity(intent)
-            } catch (_: ActivityNotFoundException) {
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.no_browser_found),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -116,74 +62,95 @@ fun SettingsScreen(onBack: () -> Unit) {
                     IconButton(onClick = onBack) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Назад")
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = colorResource(id = R.color.white) )
-
+                }
             )
-        }
+        },
+        containerColor = Color.White
     ) { innerPadding ->
-        val items = listOf(
-            SettingsItem(
-                title = stringResource(R.string.btn_share_app),
-                trailing = { Icon(Icons.Filled.Share, contentDescription = null) },
-                onClick = onShare
-            ),
-            SettingsItem(
-                title = stringResource(R.string.btn_write_to_devs),
-                trailing = { Icon(Icons.Filled.Email, contentDescription = null) },
-                onClick = onWriteToDevs
-            ),
-            SettingsItem(
-                title = stringResource(R.string.btn_user_agreement),
-                trailing = { Icon(Icons.Filled.ArrowForward, contentDescription = null) },
-                onClick = onOpenOffer
-            )
-        )
-
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            item { Divider() }
 
-            items(items) { item ->
-                SettingRow(
-                    text = item.title,
-                    trailing = item.trailing,
-                    onClick = item.onClick
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                        }
+                        val chooser = Intent.createChooser(
+                            shareIntent,
+                            context.getString(R.string.share_chooser_title)
+                        )
+                        context.startActivity(chooser)
+                    }
+                    .padding(horizontal = 16.dp, vertical = 18.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.btn_share_app),
+                    fontSize = 16.sp,
+                    modifier = Modifier.weight(1f)
                 )
-                Divider()
+                Icon(
+                    imageVector = Icons.Filled.Share,
+                    contentDescription = null
+                )
             }
+
+            Spacer(Modifier.height(2.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        val mailUri = Uri.parse("mailto:$emailTo")
+                        val emailIntent = Intent(Intent.ACTION_SENDTO, mailUri).apply {
+                            putExtra(Intent.EXTRA_SUBJECT, emailSubject)
+                            putExtra(Intent.EXTRA_TEXT, emailBody)
+                        }
+                        context.startActivity(emailIntent)
+                    }
+                    .padding(horizontal = 16.dp, vertical = 18.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.btn_write_to_devs),
+                    fontSize = 16.sp,
+                    modifier = Modifier.weight(1f)
+                )
+                Icon(
+                    imageVector = Icons.Filled.Email,
+                    contentDescription = null
+                )
+            }
+
+            Spacer(Modifier.height(2.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(offerUrl))
+                        context.startActivity(intent)
+                    }
+                    .padding(horizontal = 16.dp, vertical = 18.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.btn_user_agreement),
+                    fontSize = 16.sp,
+                    modifier = Modifier.weight(1f)
+                )
+                Icon(
+                    imageVector = Icons.Filled.ArrowForward,
+                    contentDescription = null
+                )
+            }
+
+            Spacer(Modifier.height(2.dp))
         }
-    }
-}
-
-private data class SettingsItem(
-    val title: String,
-    val trailing: @Composable () -> Unit,
-    val onClick: () -> Unit
-)
-
-@Composable
-private fun SettingRow(
-    text: String,
-    trailing: @Composable () -> Unit,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(horizontal = 16.dp, vertical = 14.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = text,
-            fontSize = 16.sp,
-            modifier = Modifier.weight(1f)
-        )
-        trailing()
     }
 }
