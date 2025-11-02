@@ -16,4 +16,13 @@
     <string name="no_apps_found">Не найдено подходящих приложений</string>
     <string name="no_mail_clients">Не найден почтовый клиент</string>
     <string name="no_browser_found">Не найден браузер</string>
+    <string name="search_title">Поиск</string>
+    <string name="placeholder">Поиск</string>
+    <string name="loading">Идёт поиск…</string>
+    <string name="error_empty">Ничего не найдено</string>
+    <string name="error_network">Произошла ошибка. Попробуйте ещё раз</string>
+    <string name="track_selected">Трек «%1$s» выбран</string>
+    <string name="description_back">Назад</string>
+    <string name="description_search">Начать поиск</string>
+    <string name="description_clear">Очистить запрос</string>
 </resources>
