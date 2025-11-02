@@ -10,8 +10,8 @@ import com.example.playlist_maker_android_rassohinegor.domain.api.TracksReposito
 class TracksViewModelFactory : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        val repo = Creator.tracksRepository
-        val interactor: TrackSearchInteractor = TracksRepository(repo)
+        val repository = Creator.provideTracksRepository()
+        val interactor: TrackSearchInteractor = TrackSearchInteractorImpl(repository)
         return TracksViewModel(interactor) as T
     }
 }

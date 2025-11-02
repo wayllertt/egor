@@ -43,7 +43,8 @@ import com.example.playlist_maker_android_rassohinegor.ui.navigation.PlaylistHos
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { val navController = rememberNavController()
+        setContent {
+            val navController = rememberNavController()
             PlaylistHost(navController = navController)
         }
     }

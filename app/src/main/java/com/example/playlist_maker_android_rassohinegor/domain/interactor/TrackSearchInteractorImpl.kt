@@ -7,21 +7,14 @@ import com.example.playlist_maker_android_rassohinegor.domain.api.TracksReposito
 import com.example.playlist_maker_android_rassohinegor.domain.model.Track
 import kotlinx.coroutines.delay
 
-class TrackSearchInteractorImpl(private val networkClient: NetworkClient) : TracksRepository {
+class TrackSearchInteractorImpl(
+private val repository: TracksRepository,
+) : TrackSearchInteractor {
 
+    override suspend fun getAllTracks(): List<Track> {
+        return repository.searchTracks("")
+    }
     override suspend fun searchTracks(expression: String): List<Track> {
-        val response = networkClient.doRequest(TracksSearchRequest(expression))
-        delay(1_000)
-        return if (response.resultCode == 200) {
-            (response as TracksSearchResponse).results.map { trackDto ->
-                val totalSeconds = trackDto.trackTimeMillis / 1_000
-                val minutes = totalSeconds / 60
-                val seconds = totalSeconds % 60
-                val trackTime = "%02d:%02d".format(minutes, seconds)
-                Track(trackDto.trackName, trackDto.artistName, trackTime)
-            }
-        } else {
-            emptyList()
-        }
+        return repository.searchTracks(expression)
     }
 }
