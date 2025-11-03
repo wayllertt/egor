@@ -35,7 +35,6 @@ fun MainScreen(
             .fillMaxSize()
             .background(Color(0xFFF9F9F9))
     ) {
-        // Хедер
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -55,7 +54,6 @@ fun MainScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        // Пункты меню
         DrawerItem(icon = Icons.Default.Search, text = "Поиск") { onOpenSearch() }
         DrawerItem(icon = Icons.Default.PlayArrow, text = "Плейлисты") { onOpenTracks() }
         DrawerItem(icon = Icons.Default.FavoriteBorder, text = "Избранное") {}

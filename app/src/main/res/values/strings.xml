@@ -25,4 +25,9 @@
     <string name="description_back">Назад</string>
     <string name="description_search">Начать поиск</string>
     <string name="description_clear">Очистить запрос</string>
+    <string name="playlist_maker">Playlist maker</string>
+    <string name="search">Поиск</string>
+    <string name="playlists">Плейлисты</string>
+    <string name="favorites">Избранное</string>
+    <string name="tracks_title">Все треки</string>
 </resources>
