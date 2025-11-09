@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="screen_padding">16dp</dimen>
+    <dimen name="header_corner_radius">12dp</dimen>
+    <dimen name="header_padding_vertical">20dp</dimen>
+    <dimen name="header_padding_horizontal">16dp</dimen>
+    <dimen name="header_spacing_below">10dp</dimen>
+    <dimen name="drawer_item_icon_size">22dp</dimen>
+    <dimen name="drawer_item_icon_spacing">16dp</dimen>
+    <dimen name="drawer_item_padding_horizontal">16dp</dimen>
+    <dimen name="drawer_item_padding_vertical">16dp</dimen>
+    <dimen name="menu_row_icon_size">30dp</dimen>
+    <dimen name="menu_row_icon_spacing">20dp</dimen>
+    <dimen name="search_field_top_spacing">16dp</dimen>
+    <dimen name="search_field_bottom_spacing">24dp</dimen>
+    <dimen name="search_results_spacing">12dp</dimen>
+    <dimen name="search_content_bottom_padding">16dp</dimen>
+    <dimen name="search_content_top_padding">32dp</dimen>
+    <dimen name="settings_item_padding_vertical">18dp</dimen>
+    <dimen name="divider_spacing">2dp</dimen>
+    <dimen name="track_row_padding_horizontal">16dp</dimen>
+    <dimen name="track_row_padding_vertical">12dp</dimen>
+    <dimen name="track_row_spacing">2dp</dimen>
+    <dimen name="retry_button_spacing">8dp</dimen>
+</resources>

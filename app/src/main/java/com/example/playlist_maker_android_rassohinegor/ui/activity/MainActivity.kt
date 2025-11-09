@@ -36,6 +36,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.example.playlist_maker_android_rassohinegor.ui.navigation.PlaylistHost
 import com.example.playlist_maker_android_rassohinegor.R
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,10 +60,10 @@ fun MainScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF9F9F9))
+            .background(colorResource(id = R.color.screen_background))
     ) {
         Header(title = stringResource(id = R.string.playlist_maker))
-        Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(dimensionResource(id = R.dimen.header_spacing_below)))
 
         MenuRow(icon = Icons.Default.Search, text = stringResource( R.string.search)) {
             onOpenSearch()
@@ -83,15 +85,21 @@ private fun Header(title: String) {
     Box(
         modifier = Modifier
             .background(
-                color = Color(0xFF3D6EFF),
-                shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
+                color = colorResource(id = R.color.main_header_background),
+                shape = RoundedCornerShape(
+                    bottomStart = dimensionResource(id = R.dimen.header_corner_radius),
+                    bottomEnd = dimensionResource(id = R.dimen.header_corner_radius)
+                )
             )
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 30.dp)
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.header_padding_horizontal),
+                vertical = dimensionResource(id = R.dimen.header_padding_vertical)
+            )
     ) {
         Text(
             text = title,
-            color = Color.White,
+            color = colorResource(id = R.color.main_header_text),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
@@ -110,21 +118,24 @@ fun MenuRow(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { click.value?.invoke() }
-            .padding(horizontal = 16.dp, vertical = 16.dp),
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.drawer_item_padding_horizontal),
+                vertical = dimensionResource(id = R.dimen.drawer_item_padding_vertical)
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = Color.Black.copy(alpha = 0.85f),
-            modifier = Modifier.size(30.dp)
+            tint = colorResource(id = R.color.primary_text).copy(alpha = 0.85f),
+            modifier = Modifier.size(dimensionResource(id = R.dimen.menu_row_icon_size))
         )
 
-        Spacer(Modifier.width(20.dp))
+        Spacer(Modifier.width(dimensionResource(id = R.dimen.menu_row_icon_spacing)))
 
         Text(
             text = text,
-            color = Color.Black.copy(alpha = 0.9f),
+            color = colorResource(id = R.color.primary_text).copy(alpha = 0.9f),
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.weight(1f)

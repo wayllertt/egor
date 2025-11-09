@@ -2,7 +2,16 @@ package com.example.playlist_maker_android_rassohinegor.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -14,12 +23,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.playlist_maker_android_rassohinegor.R
 
 @Composable
 fun MainScreen(
@@ -27,36 +37,40 @@ fun MainScreen(
     onOpenSettings: () -> Unit,
     onOpenTracks: () -> Unit
 ) {
-    val context = LocalContext.current
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF9F9F9))
+            .background(colorResource(id = R.color.screen_background))
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    Color(0xFF3D6EFF),
-                    RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
+                    colorResource(id = R.color.main_header_background),
+                    RoundedCornerShape(
+                        bottomStart = dimensionResource(id = R.dimen.header_corner_radius),
+                        bottomEnd = dimensionResource(id = R.dimen.header_corner_radius)
+                    )
                 )
-                .padding(vertical = 20.dp, horizontal = 16.dp)
+                .padding(
+                    vertical = dimensionResource(id = R.dimen.header_padding_vertical),
+                    horizontal = dimensionResource(id = R.dimen.header_padding_horizontal)
+                )
         ) {
             Text(
-                text = "Playlist maker",
-                color = Color.White,
+                text = stringResource(id = R.string.playlist_maker),
+                color = colorResource(id = R.color.main_header_text),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.header_spacing_below)))
 
-        DrawerItem(icon = Icons.Default.Search, text = "Поиск") { onOpenSearch() }
-        DrawerItem(icon = Icons.Default.PlayArrow, text = "Плейлисты") { onOpenTracks() }
-        DrawerItem(icon = Icons.Default.FavoriteBorder, text = "Избранное") {}
-        DrawerItem(icon = Icons.Default.Settings, text = "Настройки") { onOpenSettings() }
+        DrawerItem(icon = Icons.Default.Search, text = stringResource(id = R.string.search)) { onOpenSearch() }
+        DrawerItem(icon = Icons.Default.PlayArrow, text = stringResource(id = R.string.playlists)) { onOpenTracks() }
+        DrawerItem(icon = Icons.Default.FavoriteBorder, text = stringResource(id = R.string.favorites)) {}
+        DrawerItem(icon = Icons.Default.Settings, text = stringResource(id = R.string.settings_title)) { onOpenSettings() }
     }
 }
 
@@ -70,21 +84,24 @@ fun DrawerItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick?.invoke() }
-            .padding(horizontal = 16.dp, vertical = 16.dp),
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.drawer_item_padding_horizontal),
+                vertical = dimensionResource(id = R.dimen.drawer_item_padding_vertical)
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = Color.Black.copy(alpha = 0.85f),
-            modifier = Modifier.size(22.dp)
+            tint = colorResource(id = R.color.primary_text).copy(alpha = 0.85f),
+            modifier = Modifier.size(dimensionResource(id = R.dimen.drawer_item_icon_size))
         )
 
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.drawer_item_icon_spacing)))
 
         Text(
             text = text,
-            color = Color.Black.copy(alpha = 0.9f),
+            color = colorResource(id = R.color.primary_text).copy(alpha = 0.9f),
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.weight(1f)

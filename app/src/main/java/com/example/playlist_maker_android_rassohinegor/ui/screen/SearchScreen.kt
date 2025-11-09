@@ -28,6 +28,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,8 +36,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -78,6 +80,8 @@ fun SearchScreen(
     val context = LocalContext.current
 
     Scaffold(
+        containerColor = colorResource(id = R.color.screen_background),
+        contentColor = colorResource(id = R.color.primary_text),
         topBar = {
             TopAppBar(
                 title = {
@@ -94,6 +98,11 @@ fun SearchScreen(
                         )
                     }
                 },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = colorResource(id = R.color.screen_background),
+                    titleContentColor = colorResource(id = R.color.primary_text),
+                    navigationIconContentColor = colorResource(id = R.color.primary_text)
+                )
             )
         },
     ) { innerPadding ->
@@ -101,9 +110,10 @@ fun SearchScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .padding(horizontal = 16.dp),
+                .background(colorResource(id = R.color.screen_background))
+                .padding(horizontal = dimensionResource(id = R.dimen.screen_padding)),
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.search_field_top_spacing)))
 
             OutlinedTextField(
                 value = searchQuery,
@@ -140,20 +150,20 @@ fun SearchScreen(
                 },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
-                shape = RoundedCornerShape(12.dp),
+                shape = RoundedCornerShape(dimensionResource(id = R.dimen.header_corner_radius)),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = fieldColor,
                     unfocusedContainerColor = fieldColor,
                     disabledContainerColor = fieldColor,
                     errorContainerColor = fieldColor,
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent,
-                    disabledBorderColor = Color.Transparent,
-                    errorBorderColor = Color.Transparent,
+                    focusedBorderColor = androidx.compose.ui.graphics.Color.Transparent,
+                    unfocusedBorderColor = androidx.compose.ui.graphics.Color.Transparent,
+                    disabledBorderColor = androidx.compose.ui.graphics.Color.Transparent,
+                    errorBorderColor = androidx.compose.ui.graphics.Color.Transparent,
                 ),
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.search_field_bottom_spacing)))
 
             when (state) {
                 SearchState.Initial -> Unit
@@ -161,12 +171,15 @@ fun SearchScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 32.dp),
+                            .padding(top = dimensionResource(id = R.dimen.search_content_top_padding)),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         CircularProgressIndicator()
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(text = stringResource(id = R.string.loading))
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.search_field_top_spacing)))
+                        Text(
+                            text = stringResource(id = R.string.loading),
+                            color = colorResource(id = R.color.primary_text)
+                        )
                     }
                 }
 
@@ -178,18 +191,21 @@ fun SearchScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 32.dp),
+                            .padding(top = dimensionResource(id = R.dimen.search_content_top_padding)),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        Text(text = stringResource(id = message))
+                        Text(
+                            text = stringResource(id = message),
+                            color = colorResource(id = R.color.primary_text)
+                        )
                     }
                 }
 
                 is SearchState.Success -> {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(bottom = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        contentPadding = PaddingValues(bottom = dimensionResource(id = R.dimen.search_content_bottom_padding)),
+                        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.search_results_spacing)),
                     ) {
                         items(state.tracks) { track ->
                             TrackRow(
