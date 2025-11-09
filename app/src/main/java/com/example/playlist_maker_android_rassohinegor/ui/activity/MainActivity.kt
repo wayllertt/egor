@@ -1,6 +1,5 @@
 package com.example.playlist_maker_android_rassohinegor.ui.activity
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,7 +22,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberUpdatedState
@@ -36,7 +34,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
-import com.example.playlist_maker_android_rassohinegor.ui.MainScreen
 import com.example.playlist_maker_android_rassohinegor.ui.navigation.PlaylistHost
 import com.example.playlist_maker_android_rassohinegor.R
 
@@ -66,7 +63,7 @@ fun MainScreen(
         Header(title = stringResource(id = R.string.playlist_maker))
         Spacer(Modifier.height(10.dp))
 
-        MenuRow(icon = Icons.Default.Search, text = stringResource(R.string.search)) {
+        MenuRow(icon = Icons.Default.Search, text = stringResource( R.string.search)) {
             onOpenSearch()
         }
         MenuRow(icon = Icons.Default.PlayArrow, text = stringResource(R.string.playlists)) {

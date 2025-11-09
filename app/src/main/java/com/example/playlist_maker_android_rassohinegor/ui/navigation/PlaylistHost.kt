@@ -6,8 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
-import com.example.playlist_maker_android_rassohinegor.ui.MainScreen
-import com.example.playlist_maker_android_rassohinegor.ui.activity.SettingsScreen
+import com.example.playlist_maker_android_rassohinegor.ui.screen.MainScreen
+import com.example.playlist_maker_android_rassohinegor.ui.screen.SettingsScreen
+import com.example.playlist_maker_android_rassohinegor.ui.screen.SearchRoute
 import com.example.playlist_maker_android_rassohinegor.ui.tracks.TracksScreen
 
 private fun singleTop() = navOptions { launchSingleTop = true }

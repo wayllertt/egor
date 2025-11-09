@@ -1,4 +1,4 @@
-package com.example.playlist_maker_android_rassohinegor.ui.navigation
+package com.example.playlist_maker_android_rassohinegor.ui.screen
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -47,6 +47,9 @@ import com.example.playlist_maker_android_rassohinegor.creator.Creator
 import com.example.playlist_maker_android_rassohinegor.R
 import com.example.playlist_maker_android_rassohinegor.domain.model.Track
 import androidx.compose.foundation.lazy.items
+import com.example.playlist_maker_android_rassohinegor.ui.navigation.SearchError
+import com.example.playlist_maker_android_rassohinegor.ui.navigation.SearchState
+import com.example.playlist_maker_android_rassohinegor.ui.navigation.SearchViewModel
 
 @Composable
 fun SearchRoute(
