@@ -84,96 +84,115 @@ fun SettingsScreen(
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
+            SettingsToggleRow(
+                text = stringResource(R.string.theme_dark_mode),
+                checked = isDarkTheme,
+                onCheckedChange = onThemeChange,
+            )
+            Spacer(Modifier.height(dimensionResource(id = R.dimen.divider_spacing)))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                            type = "text/plain"
-                        }
-                        val chooser = Intent.createChooser(
-                            shareIntent,
-                            context.getString(R.string.share_chooser_title)
-                        )
-                        context.startActivity(chooser)
+            SettingsActionRow(
+                text = stringResource(R.string.btn_share_app),
+                onClick = {
+                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, stringResource(id = R.string.share_text))
                     }
-                    .padding(
-                        horizontal = dimensionResource(id = R.dimen.screen_padding),
-                        vertical = dimensionResource(id = R.dimen.settings_item_padding_vertical)
-                    ),
-                verticalAlignment = Alignment.CenterVertically
+                    val chooser = Intent.createChooser(
+                        shareIntent,
+                        context.getString(R.string.share_chooser_title),
+                    )
+                    context.startActivity(chooser)
+                },
             ) {
-                Text(
-                    text = stringResource(R.string.btn_share_app),
-                    fontSize = 16.sp,
-                    modifier = Modifier.weight(1f)
-                )
-                Icon(
-                    imageVector = Icons.Filled.Share,
-                    contentDescription = null
-                )
+                Icon(imageVector = Icons.Filled.Share, contentDescription = null)
             }
 
             Spacer(Modifier.height(dimensionResource(id = R.dimen.divider_spacing)))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        val mailUri = Uri.parse("mailto:$emailTo")
-                        val emailIntent = Intent(Intent.ACTION_SENDTO, mailUri).apply {
-                            putExtra(Intent.EXTRA_SUBJECT, emailSubject)
-                            putExtra(Intent.EXTRA_TEXT, emailBody)
-                        }
-                        context.startActivity(emailIntent)
+            SettingsActionRow(
+                text = stringResource(R.string.btn_write_to_devs),
+                onClick = {
+                    val mailUri = Uri.parse("mailto:$emailTo")
+                    val emailIntent = Intent(Intent.ACTION_SENDTO, mailUri).apply {
+                        putExtra(Intent.EXTRA_SUBJECT, emailSubject)
+                        putExtra(Intent.EXTRA_TEXT, emailBody)
                     }
-                    .padding(
-                        horizontal = dimensionResource(id = R.dimen.screen_padding),
-                        vertical = dimensionResource(id = R.dimen.settings_item_padding_vertical)
-                    ),
-                verticalAlignment = Alignment.CenterVertically
+                    context.startActivity(emailIntent)
+                },
             ) {
-                Text(
-                    text = stringResource(R.string.btn_write_to_devs),
-                    fontSize = 16.sp,
-                    modifier = Modifier.weight(1f)
-                )
-                Icon(
-                    imageVector = Icons.Filled.Email,
-                    contentDescription = null
-                )
+                Icon(imageVector = Icons.Filled.Email, contentDescription = null)
             }
 
             Spacer(Modifier.height(dimensionResource(id = R.dimen.divider_spacing)))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(offerUrl))
-                        context.startActivity(intent)
-                    }
-                    .padding(
-                        horizontal = dimensionResource(id = R.dimen.screen_padding),
-                        vertical = dimensionResource(id = R.dimen.settings_item_padding_vertical)
-                    ),
-                verticalAlignment = Alignment.CenterVertically
+            SettingsActionRow(
+                text = stringResource(R.string.btn_user_agreement),
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(offerUrl))
+                    context.startActivity(intent)
+                },
             ) {
-                Text(
-                    text = stringResource(R.string.btn_user_agreement),
-                    fontSize = 16.sp,
-                    modifier = Modifier.weight(1f)
-                )
-                Icon(
-                    imageVector = Icons.Filled.ArrowForward,
-                    contentDescription = null
-                )
+                Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = null)
             }
-
-            Spacer(Modifier.height(dimensionResource(id = R.dimen.divider_spacing)))
         }
+    }
+}
+
+@Composable
+private fun SettingsToggleRow(
+    text: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onCheckedChange(!checked) }
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.screen_padding),
+                vertical = dimensionResource(id = R.dimen.settings_item_padding_vertical),
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.weight(1f),
+        )
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = colorResource(id = R.color.primary_text),
+            ),
+        )
+    }
+}
+
+@Composable
+private fun SettingsActionRow(
+    text: String,
+    onClick:() -> Unit,
+    trailingContent: @Composable () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.screen_padding),
+                vertical = dimensionResource(id = R.dimen.settings_item_padding_vertical),
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.weight(1f),
+        )
+        trailingContent()
     }
 }
