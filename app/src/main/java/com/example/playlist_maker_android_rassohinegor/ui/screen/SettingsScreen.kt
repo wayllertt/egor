@@ -98,7 +98,7 @@ fun SettingsScreen(
                 onClick = {
                     val shareIntent = Intent(Intent.ACTION_SEND).apply {
                         type = "text/plain"
-                        putExtra(Intent.EXTRA_TEXT, stringResource(id = R.string.share_text))
+                        putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_text))
                     }
                     val chooser = Intent.createChooser(
                         shareIntent,
