@@ -121,7 +121,8 @@ fun SearchScreen(
                     searchQuery = newValue
                     if (newValue.isBlank()) {
                         onReset()
-                    }
+                    } else {
+                        onSearch(newValue) }
                 },
                 placeholder = { Text(text = stringResource(id = R.string.placeholder)) },
                 leadingIcon = {
@@ -150,7 +151,7 @@ fun SearchScreen(
                 },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
-                shape = RoundedCornerShape(dimensionResource(id = R.dimen.header_corner_radius)),
+                shape = RoundedCornerShape(dimensionResource(id = R.dimen.search_result_corner_radius)),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = fieldColor,
                     unfocusedContainerColor = fieldColor,
@@ -236,16 +237,19 @@ private fun TrackRow(
             .fillMaxWidth()
             .background(
                 color = MaterialTheme.colorScheme.surface,
-                shape = RoundedCornerShape(12.dp),
+                shape = RoundedCornerShape(dimensionResource(id = R.dimen.search_result_corner_radius)),
             )
             .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.search_result_padding_horizontal),
+                vertical = dimensionResource(id = R.dimen.search_result_padding_vertical),
+            ),
     ) {
         RowWithTime(
             title = track.trackName,
             time = track.trackTime,
         )
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.search_result_artist_spacing)))
         Text(
             text = track.artistName,
             style = MaterialTheme.typography.bodyMedium,

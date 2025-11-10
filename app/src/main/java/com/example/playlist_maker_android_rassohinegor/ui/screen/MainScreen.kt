@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,6 +35,7 @@ import com.example.playlist_maker_android_rassohinegor.R
 @Composable
 fun MainScreen(
     onOpenSearch: () -> Unit,
+    onOpenFavorites: () -> Unit,
     onOpenSettings: () -> Unit,
     onOpenTracks: () -> Unit
 ) {
@@ -60,7 +62,7 @@ fun MainScreen(
             Text(
                 text = stringResource(id = R.string.playlist_maker),
                 color = colorResource(id = R.color.main_header_text),
-                fontSize = 20.sp,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
         }
@@ -69,7 +71,7 @@ fun MainScreen(
 
         DrawerItem(icon = Icons.Default.Search, text = stringResource(id = R.string.search)) { onOpenSearch() }
         DrawerItem(icon = Icons.Default.PlayArrow, text = stringResource(id = R.string.playlists)) { onOpenTracks() }
-        DrawerItem(icon = Icons.Default.FavoriteBorder, text = stringResource(id = R.string.favorites)) {}
+        DrawerItem(icon = Icons.Default.FavoriteBorder, text = stringResource(id = R.string.favorites)) { onOpenFavorites() }
         DrawerItem(icon = Icons.Default.Settings, text = stringResource(id = R.string.settings_title)) { onOpenSettings() }
     }
 }
@@ -102,7 +104,7 @@ fun DrawerItem(
         Text(
             text = text,
             color = colorResource(id = R.color.primary_text).copy(alpha = 0.9f),
-            fontSize = 16.sp,
+            style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.weight(1f)
         )

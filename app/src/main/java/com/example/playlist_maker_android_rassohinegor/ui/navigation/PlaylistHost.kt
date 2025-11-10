@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
+import com.example.playlist_maker_android_rassohinegor.ui.screen.FavoritesScreen
 import com.example.playlist_maker_android_rassohinegor.ui.screen.MainScreen
 import com.example.playlist_maker_android_rassohinegor.ui.screen.SettingsScreen
 import com.example.playlist_maker_android_rassohinegor.ui.screen.SearchRoute
@@ -14,7 +15,11 @@ import com.example.playlist_maker_android_rassohinegor.ui.tracks.TracksScreen
 private fun singleTop() = navOptions { launchSingleTop = true }
 
 @Composable
-fun PlaylistHost(navController: NavHostController) {
+fun PlaylistHost(
+    navController: NavHostController,
+    isDarkTheme: Boolean,
+    onThemeChange: (Boolean) -> Unit,
+) {
     val navigateUp = remember(navController) { { navController.popBackStack(); Unit } }
 
     val navigateToMain = remember(navController) {
@@ -25,6 +30,9 @@ fun PlaylistHost(navController: NavHostController) {
     }
     val navigateToSearch = remember(navController) {
         { navController.navigate(AppScreen.Search.route, singleTop()) }
+    }
+    val navigateToFavorites = remember(navController) {
+        { navController.navigate(AppScreen.Favorites.route, singleTop()) }
     }
     val navigateToTracks = remember(navController) {
         { navController.navigate(AppScreen.Tracks.route, singleTop()) }
@@ -40,12 +48,20 @@ fun PlaylistHost(navController: NavHostController) {
         composable(AppScreen.Main.route) {
             MainScreen(
                 onOpenSearch = navigateToSearch,
+                onOpenFavorites = navigateToFavorites,
                 onOpenSettings = navigateToSettings,
                 onOpenTracks = navigateToTracks,
             )
         }
         composable(AppScreen.Search.route) { SearchRoute(onBack = navigateUp) }
+        composable(AppScreen.Favorites.route) { FavoritesScreen(onBack = navigateUp) }
         composable(AppScreen.Tracks.route) { TracksScreen(onBack = navigateUp) }
-        composable(AppScreen.Settings.route) { SettingsScreen(onBack = navigateUp) }
+        composable(AppScreen.Settings.route) {
+            SettingsScreen(
+                onBack = navigateUp,
+                isDarkTheme = isDarkTheme,
+                onThemeChange = onThemeChange,
+            )
+        }
     }
 }

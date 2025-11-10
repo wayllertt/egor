@@ -22,4 +22,8 @@
     <dimen name="track_row_padding_vertical">12dp</dimen>
     <dimen name="track_row_spacing">2dp</dimen>
     <dimen name="retry_button_spacing">8dp</dimen>
+    <dimen name="search_result_corner_radius">12dp</dimen>
+    <dimen name="search_result_padding_horizontal">16dp</dimen>
+    <dimen name="search_result_padding_vertical">12dp</dimen>
+    <dimen name="search_result_artist_spacing">4dp</dimen>
 </resources>

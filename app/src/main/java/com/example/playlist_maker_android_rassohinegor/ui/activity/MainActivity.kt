@@ -27,118 +27,53 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.example.playlist_maker_android_rassohinegor.ui.navigation.PlaylistHost
 import com.example.playlist_maker_android_rassohinegor.R
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import com.example.playlist_maker_android_rassohinegor.data.preferences.ThemePreferences
+import com.example.playlist_maker_android_rassohinegor.ui.theme.PlaylistmakerandroidRassohinEgorTheme
 
 class MainActivity : ComponentActivity() {
+    private lateinit var themePreferences: ThemePreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
+        themePreferences = ThemePreferences(this)
+        AppCompatDelegate.setDefaultNightMode(
+            if (themePreferences.isDarkTheme()) {
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+        )
+    setContent {
+        var isDarkTheme by rememberSaveable { mutableStateOf(themePreferences.isDarkTheme()) }
+
+        PlaylistmakerandroidRassohinEgorTheme(darkTheme = isDarkTheme) {
             val navController = rememberNavController()
-            PlaylistHost(navController = navController)
-        }
-    }
-}
-
-@Composable
-fun MainScreen(
-    onOpenSearch: () -> Unit,
-    onOpenPlaylists: () -> Unit,
-    onOpenFavorites: () -> Unit,
-    onOpenSettings: () -> Unit,
-) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.screen_background))
-    ) {
-        Header(title = stringResource(id = R.string.playlist_maker))
-        Spacer(Modifier.height(dimensionResource(id = R.dimen.header_spacing_below)))
-
-        MenuRow(icon = Icons.Default.Search, text = stringResource( R.string.search)) {
-            onOpenSearch()
-        }
-        MenuRow(icon = Icons.Default.PlayArrow, text = stringResource(R.string.playlists)) {
-            onOpenPlaylists()
-        }
-        MenuRow(icon = Icons.Default.FavoriteBorder, text = stringResource(R.string.favorites)) {
-            onOpenFavorites()
-        }
-        MenuRow(icon = Icons.Default.Settings, text = stringResource(R.string.settings_title)) {
-            onOpenSettings()
-        }
-    }
-}
-
-@Composable
-private fun Header(title: String) {
-    Box(
-        modifier = Modifier
-            .background(
-                color = colorResource(id = R.color.main_header_background),
-                shape = RoundedCornerShape(
-                    bottomStart = dimensionResource(id = R.dimen.header_corner_radius),
-                    bottomEnd = dimensionResource(id = R.dimen.header_corner_radius)
-                )
+            PlaylistHost(
+                navController = navController,
+                isDarkTheme = isDarkTheme,
+                onThemeChange = { enabled ->
+                    if (isDarkTheme == enabled) return@PlaylistHost
+                    themePreferences.setDarkTheme(enabled)
+                    isDarkTheme = enabled
+                    AppCompatDelegate.setDefaultNightMode(
+                        if (enabled) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+                    )
+                },
             )
-            .fillMaxWidth()
-            .padding(
-                horizontal = dimensionResource(id = R.dimen.header_padding_horizontal),
-                vertical = dimensionResource(id = R.dimen.header_padding_vertical)
-            )
-    ) {
-        Text(
-            text = title,
-            color = colorResource(id = R.color.main_header_text),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        )
+        }
     }
 }
-
-@Composable
-fun MenuRow(
-    icon: ImageVector,
-    text: String,
-    onClick: (() -> Unit)? = null
-) {
-    val click = rememberUpdatedState(newValue = onClick)
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { click.value?.invoke() }
-            .padding(
-                horizontal = dimensionResource(id = R.dimen.drawer_item_padding_horizontal),
-                vertical = dimensionResource(id = R.dimen.drawer_item_padding_vertical)
-            ),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = colorResource(id = R.color.primary_text).copy(alpha = 0.85f),
-            modifier = Modifier.size(dimensionResource(id = R.dimen.menu_row_icon_size))
-        )
-
-        Spacer(Modifier.width(dimensionResource(id = R.dimen.menu_row_icon_spacing)))
-
-        Text(
-            text = text,
-            color = colorResource(id = R.color.primary_text).copy(alpha = 0.9f),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.weight(1f)
-        )
-    }
 }
