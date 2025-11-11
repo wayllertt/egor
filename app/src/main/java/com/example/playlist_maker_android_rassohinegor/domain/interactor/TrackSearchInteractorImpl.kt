@@ -8,7 +8,7 @@ import com.example.playlist_maker_android_rassohinegor.domain.model.Track
 import kotlinx.coroutines.delay
 
 class TrackSearchInteractorImpl(
-private val repository: TracksRepository,
+    private val repository: TracksRepository,
 ) : TrackSearchInteractor {
 
     override suspend fun getAllTracks(): List<Track> {
