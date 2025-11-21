@@ -51,7 +51,7 @@ fun MainScreen(
     onOpenSearch: () -> Unit,
     onOpenFavorites: () -> Unit,
     onOpenSettings: () -> Unit,
-    onOpenTracks: () -> Unit
+    onOpenPlaylists: () -> Unit
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
@@ -138,7 +138,7 @@ fun MainScreen(
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.header_spacing_below)))
 
             DrawerItem(icon = Icons.Default.Search, text = stringResource(id = R.string.search)) { onOpenSearch() }
-            DrawerItem(icon = Icons.Default.PlayArrow, text = stringResource(id = R.string.playlists)) { onOpenTracks() }
+            DrawerItem(icon = Icons.Default.PlayArrow, text = stringResource(id = R.string.playlists)) { onOpenPlaylists() }
             DrawerItem(icon = Icons.Default.FavoriteBorder, text = stringResource(id = R.string.favorites)) { onOpenFavorites() }
             DrawerItem(icon = Icons.Default.Settings, text = stringResource(id = R.string.settings_title)) { onOpenSettings() }
         }

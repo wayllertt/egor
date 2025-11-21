@@ -6,10 +6,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
+import androidx.navigation.navArgument
+import androidx.navigation.NavType
 import com.example.playlist_maker_android_rassohinegor.ui.screen.FavoritesScreen
 import com.example.playlist_maker_android_rassohinegor.ui.screen.MainScreen
 import com.example.playlist_maker_android_rassohinegor.ui.screen.SettingsScreen
 import com.example.playlist_maker_android_rassohinegor.ui.screen.SearchRoute
+import com.example.playlist_maker_android_rassohinegor.ui.screen.NewPlaylistScreen
+import com.example.playlist_maker_android_rassohinegor.ui.screen.PlaylistsScreen
+import com.example.playlist_maker_android_rassohinegor.ui.screen.TrackDetailsScreen
 import com.example.playlist_maker_android_rassohinegor.ui.tracks.TracksScreen
 
 private fun singleTop() = navOptions { launchSingleTop = true }
@@ -37,6 +42,15 @@ fun PlaylistHost(
     val navigateToTracks = remember(navController) {
         { navController.navigate(AppScreen.Tracks.route, singleTop()) }
     }
+    val navigateToPlaylists = remember(navController) {
+        { navController.navigate(AppScreen.Playlists.route, singleTop()) }
+    }
+    val navigateToNewPlaylist = remember(navController) {
+        { navController.navigate(AppScreen.NewPlaylist.route) }
+    }
+    val navigateToTrackDetails = remember(navController) {
+        { trackId: Long -> navController.navigate("${AppScreen.TrackDetails.route}/$trackId") }
+    }
     val navigateToSettings = remember(navController) {
         { navController.navigate(AppScreen.Settings.route, singleTop()) }
     }
@@ -50,12 +64,30 @@ fun PlaylistHost(
                 onOpenSearch = navigateToSearch,
                 onOpenFavorites = navigateToFavorites,
                 onOpenSettings = navigateToSettings,
-                onOpenTracks = navigateToTracks,
+                onOpenPlaylists = navigateToPlaylists,
             )
         }
-        composable(AppScreen.Search.route) { SearchRoute(onBack = navigateUp) }
-        composable(AppScreen.Favorites.route) { FavoritesScreen(onBack = navigateUp) }
-        composable(AppScreen.Tracks.route) { TracksScreen(onBack = navigateUp) }
+        composable(AppScreen.Search.route) { SearchRoute(onBack = navigateUp, onTrackClick = navigateToTrackDetails) }
+        composable(AppScreen.Favorites.route) {
+            FavoritesScreen(onBack = navigateUp, onTrackClick = navigateToTrackDetails)
+        }
+        composable(AppScreen.Tracks.route) { TracksScreen(onBack = navigateUp, onTrackClick = navigateToTrackDetails) }
+        composable(AppScreen.Playlists.route) {
+            PlaylistsScreen(
+                onBack = navigateUp,
+                onAddNewPlaylist = navigateToNewPlaylist,
+            )
+        }
+        composable(AppScreen.NewPlaylist.route) {
+            NewPlaylistScreen(onBack = navigateUp)
+        }
+        composable(
+            route = "${AppScreen.TrackDetails.route}/{trackId}",
+            arguments = listOf(navArgument("trackId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val trackId = backStackEntry.arguments?.getLong("trackId") ?: 0L
+            TrackDetailsScreen(trackId = trackId, onBack = navigateUp)
+        }
         composable(AppScreen.Settings.route) {
             SettingsScreen(
                 onBack = navigateUp,

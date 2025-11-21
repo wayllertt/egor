@@ -1,5 +1,6 @@
 package com.example.playlist_maker_android_rassohinegor.ui.tracks
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,7 +14,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,15 +34,17 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.playlist_maker_android_rassohinegor.domain.model.Track
 import com.example.playlist_maker_android_rassohinegor.R
+import com.example.playlist_maker_android_rassohinegor.creator.Creator
+import com.example.playlist_maker_android_rassohinegor.domain.model.Track
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TracksScreen(
     onBack: () -> Unit,
-    viewModel: TracksViewModel = viewModel(factory = TracksViewModelFactory())
+    onTrackClick: (Long) -> Unit,
+    viewModel: TracksViewModel = viewModel(factory = Creator.provideTracksViewModelFactory())
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -86,6 +98,7 @@ fun TracksScreen(
 
             is TracksUiState.Content -> TracksList(
                 tracks = s.tracks,
+                onTrackClick = onTrackClick,
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
@@ -95,23 +108,24 @@ fun TracksScreen(
 }
 
 @Composable
-private fun TracksList(tracks: List<Track>, modifier: Modifier = Modifier) {
+private fun TracksList(tracks: List<Track>, onTrackClick: (Long) -> Unit, modifier: Modifier = Modifier) {
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(bottom = dimensionResource(id = R.dimen.search_content_bottom_padding))
     ) {
         items(tracks) { track ->
-            TrackRow(track = track)
+            TrackRow(track = track, onClick = { onTrackClick(track.id) })
             Divider()
         }
     }
 }
 
 @Composable
-private fun TrackRow(track: Track) {
+private fun TrackRow(track: Track, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick = onClick)
             .padding(
                 horizontal = dimensionResource(id = R.dimen.track_row_padding_horizontal),
                 vertical = dimensionResource(id = R.dimen.track_row_padding_vertical)
