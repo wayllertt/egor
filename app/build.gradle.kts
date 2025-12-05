@@ -58,4 +58,5 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.appcompat)
+    implementation(libs.coil.compose)
 }

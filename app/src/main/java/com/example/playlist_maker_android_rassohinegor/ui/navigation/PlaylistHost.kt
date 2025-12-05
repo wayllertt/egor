@@ -2,17 +2,20 @@ package com.example.playlist_maker_android_rassohinegor.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
 import androidx.navigation.navArgument
 import androidx.navigation.NavType
+import com.example.playlist_maker_android_rassohinegor.creator.Creator
 import com.example.playlist_maker_android_rassohinegor.ui.screen.FavoritesScreen
 import com.example.playlist_maker_android_rassohinegor.ui.screen.MainScreen
 import com.example.playlist_maker_android_rassohinegor.ui.screen.SettingsScreen
 import com.example.playlist_maker_android_rassohinegor.ui.screen.SearchRoute
 import com.example.playlist_maker_android_rassohinegor.ui.screen.NewPlaylistScreen
+import com.example.playlist_maker_android_rassohinegor.ui.screen.PlaylistScreen
 import com.example.playlist_maker_android_rassohinegor.ui.screen.PlaylistsScreen
 import com.example.playlist_maker_android_rassohinegor.ui.screen.TrackDetailsScreen
 import com.example.playlist_maker_android_rassohinegor.ui.tracks.TracksScreen
@@ -51,6 +54,9 @@ fun PlaylistHost(
     val navigateToTrackDetails = remember(navController) {
         { trackId: Long -> navController.navigate("${AppScreen.TrackDetails.route}/$trackId") }
     }
+    val navigateToPlaylist = remember(navController) {
+        { playlistId: Long -> navController.navigate("${AppScreen.Playlist.route}/$playlistId") }
+    }
     val navigateToSettings = remember(navController) {
         { navController.navigate(AppScreen.Settings.route, singleTop()) }
     }
@@ -76,6 +82,7 @@ fun PlaylistHost(
             PlaylistsScreen(
                 onBack = navigateUp,
                 onAddNewPlaylist = navigateToNewPlaylist,
+                onPlaylistClick = navigateToPlaylist,
             )
         }
         composable(AppScreen.NewPlaylist.route) {
@@ -87,6 +94,17 @@ fun PlaylistHost(
         ) { backStackEntry ->
             val trackId = backStackEntry.arguments?.getLong("trackId") ?: 0L
             TrackDetailsScreen(trackId = trackId, onBack = navigateUp)
+        }
+        composable(
+            route = "${AppScreen.Playlist.route}/{playlistId}",
+            arguments = listOf(navArgument("playlistId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val playlistId = backStackEntry.arguments?.getLong("playlistId") ?: 0L
+            PlaylistScreen(
+                onBack = navigateUp,
+                onTrackClick = navigateToTrackDetails,
+                viewModel = viewModel(factory = Creator.providePlaylistViewModelFactory(playlistId))
+            )
         }
         composable(AppScreen.Settings.route) {
             SettingsScreen(

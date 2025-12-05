@@ -26,6 +26,7 @@ class TracksRepositoryImpl(
                     trackName = trackDto.trackName,
                     artistName = trackDto.artistName,
                     trackTime = trackTime,
+                    artworkUrl = trackDto.artworkUrl100,
                     playlistId = trackDto.playlistId,
                     id = trackDto.id,
                     favorite = trackDto.favorite

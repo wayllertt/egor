@@ -26,4 +26,8 @@
     <dimen name="search_result_padding_horizontal">16dp</dimen>
     <dimen name="search_result_padding_vertical">12dp</dimen>
     <dimen name="search_result_artist_spacing">4dp</dimen>
+    <dimen name="search_placeholder_spacing">12dp</dimen>
+    <dimen name="search_placeholder_icon_size">96dp</dimen>
+    <dimen name="track_cover_size">64dp</dimen>
+    <dimen name="playlist_cover_size">200dp</dimen>
 </resources>

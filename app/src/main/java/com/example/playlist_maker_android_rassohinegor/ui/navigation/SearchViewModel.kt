@@ -17,6 +17,7 @@ class SearchViewModel(
     val state: StateFlow<SearchState> = _state.asStateFlow()
 
     private var searchJob: Job? = null
+    private var lastQuery: String? = null
 
     fun search(expression: String) {
         val query = expression.trim()
@@ -25,6 +26,7 @@ class SearchViewModel(
             return
         }
 
+        lastQuery = query
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             _state.value = SearchState.Searching
@@ -42,8 +44,13 @@ class SearchViewModel(
         }
     }
 
+    fun retry() {
+        lastQuery?.let { search(it) }
+    }
+
     fun reset() {
         searchJob?.cancel()
         _state.value = SearchState.Initial
+        lastQuery = null
     }
 }

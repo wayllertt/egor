@@ -9,6 +9,7 @@ import com.example.playlist_maker_android_rassohinegor.domain.api.PlaylistsRepos
 import com.example.playlist_maker_android_rassohinegor.domain.api.TracksRepository
 import com.example.playlist_maker_android_rassohinegor.ui.tracks.TracksViewModelFactory
 import com.example.playlist_maker_android_rassohinegor.ui.viewmodel.LibraryViewModelFactory
+import com.example.playlist_maker_android_rassohinegor.ui.viewmodel.PlaylistViewModelFactory
 import com.example.playlist_maker_android_rassohinegor.ui.viewmodel.TrackDetailsViewModelFactory
 
 object Creator {
@@ -36,6 +37,10 @@ object Creator {
 
     fun provideLibraryViewModelFactory(): LibraryViewModelFactory {
         return LibraryViewModelFactory(playlistsRepository, tracksRepository)
+    }
+
+    fun providePlaylistViewModelFactory(playlistId: Long): PlaylistViewModelFactory {
+        return PlaylistViewModelFactory(playlistsRepository, playlistId)
     }
 
     fun provideTrackDetailsViewModelFactory(trackId: Long): TrackDetailsViewModelFactory {

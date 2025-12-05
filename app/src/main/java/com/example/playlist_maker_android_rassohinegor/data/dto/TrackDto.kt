@@ -6,6 +6,7 @@ data class TrackDto(
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Int,
+    val artworkUrl100: String? = null,
     val playlistId: Long = NO_PLAYLIST,
     val id: Long,
     val favorite: Boolean

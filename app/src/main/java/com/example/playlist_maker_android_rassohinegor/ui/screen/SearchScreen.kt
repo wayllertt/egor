@@ -1,6 +1,5 @@
 package com.example.playlist_maker_android_rassohinegor.ui.screen
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,12 +11,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,13 +37,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.playlist_maker_android_rassohinegor.creator.Creator
@@ -52,6 +53,8 @@ import androidx.compose.foundation.lazy.items
 import com.example.playlist_maker_android_rassohinegor.ui.navigation.SearchError
 import com.example.playlist_maker_android_rassohinegor.ui.navigation.SearchState
 import com.example.playlist_maker_android_rassohinegor.ui.navigation.SearchViewModel
+import coil.compose.AsyncImage
+import androidx.compose.ui.layout.ContentScale
 
 @Composable
 fun SearchRoute(
@@ -64,6 +67,7 @@ fun SearchRoute(
         state = state,
         onBack = onBack,
         onSearch = viewModel::search,
+        onRetry = viewModel::retry,
         onReset = viewModel::reset,
         onTrackClick = onTrackClick,
     )
@@ -75,12 +79,12 @@ fun SearchScreen(
     state: SearchState,
     onBack: () -> Unit,
     onSearch: (String) -> Unit,
+    onRetry: () -> Unit,
     onReset: () -> Unit,
     onTrackClick: (Long) -> Unit,
 ) {
     var searchQuery by rememberSaveable { mutableStateOf("") }
     val fieldColor = MaterialTheme.colorScheme.surfaceVariant
-    val context = LocalContext.current
 
     Scaffold(
         containerColor = colorResource(id = R.color.screen_background),
@@ -125,7 +129,8 @@ fun SearchScreen(
                     if (newValue.isBlank()) {
                         onReset()
                     } else {
-                        onSearch(newValue) }
+                        onSearch(newValue)
+                    }
                 },
                 placeholder = { Text(text = stringResource(id = R.string.placeholder)) },
                 leadingIcon = {
@@ -192,17 +197,13 @@ fun SearchScreen(
                         SearchError.EMPTY_RESULT -> R.string.error_empty
                         SearchError.NETWORK -> R.string.error_network
                     }
-                    Column(
+                    SearchPlaceholder(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = dimensionResource(id = R.dimen.search_content_top_padding)),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        Text(
-                            text = stringResource(id = message),
-                            color = colorResource(id = R.color.primary_text)
-                        )
-                    }
+                        message = stringResource(id = message),
+                        onRetry = if (state.reason == SearchError.NETWORK) onRetry else null
+                    )
                 }
 
                 is SearchState.Success -> {
@@ -225,11 +226,37 @@ fun SearchScreen(
 }
 
 @Composable
+private fun SearchPlaceholder(
+    modifier: Modifier = Modifier,
+    message: String,
+    onRetry: (() -> Unit)? = null
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.search_placeholder_spacing))
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_music),
+            contentDescription = null,
+            tint = colorResource(id = R.color.primary_text),
+            modifier = Modifier.size(dimensionResource(id = R.dimen.search_placeholder_icon_size))
+        )
+        Text(text = message, color = colorResource(id = R.color.primary_text))
+        if (onRetry != null) {
+            Button(onClick = onRetry) {
+                Text(text = stringResource(id = R.string.retry))
+            }
+        }
+    }
+}
+
+@Composable
 private fun TrackRow(
     track: Track,
     onClick: () -> Unit,
 ) {
-    Column(
+    androidx.compose.foundation.layout.Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(
@@ -241,19 +268,36 @@ private fun TrackRow(
                 horizontal = dimensionResource(id = R.dimen.search_result_padding_horizontal),
                 vertical = dimensionResource(id = R.dimen.search_result_padding_vertical),
             ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.track_row_padding_horizontal))
     ) {
-        RowWithTime(
-            title = track.trackName,
-            time = track.trackTime,
+        AsyncImage(
+            model = track.artworkUrl,
+            contentDescription = stringResource(id = R.string.description_search),
+            modifier = Modifier
+                .size(dimensionResource(id = R.dimen.track_cover_size))
+                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.search_result_corner_radius))),
+            contentScale = ContentScale.Crop,
+            placeholder = painterResource(id = R.drawable.ic_music),
+            error = painterResource(id = R.drawable.ic_music),
+            fallback = painterResource(id = R.drawable.ic_music)
         )
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.search_result_artist_spacing)))
-        Text(
-            text = track.artistName,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.search_result_artist_spacing))
+        ) {
+            RowWithTime(
+                title = track.trackName,
+                time = track.trackTime,
+            )
+            Text(
+                text = track.artistName,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
     }
 }
 
