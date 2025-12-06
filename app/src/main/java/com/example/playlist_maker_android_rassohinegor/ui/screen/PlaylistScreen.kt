@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -43,6 +44,7 @@ import com.example.playlist_maker_android_rassohinegor.domain.model.Track
 import com.example.playlist_maker_android_rassohinegor.ui.viewmodel.LibraryViewModel
 import com.example.playlist_maker_android_rassohinegor.ui.viewmodel.PlaylistViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlaylistsScreen(
     onBack: () -> Unit,
@@ -131,6 +133,7 @@ fun PlaylistListItem(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlaylistScreen(
     onBack: () -> Unit,
