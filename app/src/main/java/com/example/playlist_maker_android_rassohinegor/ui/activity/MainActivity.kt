@@ -12,12 +12,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.playlist_maker_android_rassohinegor.data.preferences.ThemePreferences
 import com.example.playlist_maker_android_rassohinegor.ui.navigation.PlaylistHost
 import com.example.playlist_maker_android_rassohinegor.ui.theme.PlaylistmakerandroidRassohinEgorTheme
+import com.example.playlist_maker_android_rassohinegor.creator.Creator
 
 class MainActivity : ComponentActivity() {
     private lateinit var themePreferences: ThemePreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Creator.init(applicationContext)
         themePreferences = ThemePreferences(this)
         AppCompatDelegate.setDefaultNightMode(
             if (themePreferences.isDarkTheme()) {
