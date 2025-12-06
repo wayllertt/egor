@@ -13,8 +13,7 @@ import com.example.playlist_maker_android_rassohinegor.ui.viewmodel.PlaylistView
 import com.example.playlist_maker_android_rassohinegor.ui.viewmodel.TrackDetailsViewModelFactory
 
 object Creator {
-    private val storage by lazy { Storage() }
-    private val networkClient by lazy { RetrofitNetworkClient(storage) }
+    private val networkClient by lazy { RetrofitNetworkClient() }
     private val database by lazy { DatabaseMock() }
 
     private val tracksRepository: TracksRepository by lazy {

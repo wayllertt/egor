@@ -5,8 +5,8 @@ import com.example.playlist_maker_android_rassohinegor.data.network.response.Tra
 import com.example.playlist_maker_android_rassohinegor.domain.api.NetworkClient
 import com.example.playlist_maker_android_rassohinegor.domain.api.TracksRepository
 import com.example.playlist_maker_android_rassohinegor.domain.model.Track
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import java.io.IOException
 
 class TracksRepositoryImpl(
     private val networkClient: NetworkClient,
@@ -15,25 +15,24 @@ class TracksRepositoryImpl(
 
     override suspend fun searchTracks(expression: String): List<Track> {
         val response = networkClient.doRequest(TracksSearchRequest(expression))
-        delay(1_000)
-        val tracks = if (response.resultCode == 200) {
-            (response as TracksSearchResponse).results.map { trackDto ->
-                val totalSeconds = trackDto.trackTimeMillis / 1_000
-                val minutes = totalSeconds / 60
-                val seconds = totalSeconds % 60
-                val trackTime = "%02d:%02d".format(minutes, seconds)
-                Track(
-                    trackName = trackDto.trackName,
-                    artistName = trackDto.artistName,
-                    trackTime = trackTime,
-                    artworkUrl = trackDto.artworkUrl100,
-                    playlistId = trackDto.playlistId,
-                    id = trackDto.id,
-                    favorite = trackDto.favorite
-                )
-            }
-        } else {
-            emptyList()
+        if (response !is TracksSearchResponse || response.resultCode != 200) {
+            throw IOException("Failed to fetch tracks")
+        }
+
+        val tracks = response.results.map { trackDto ->
+            val totalSeconds = trackDto.trackTimeMillis / 1_000
+            val minutes = totalSeconds / 60
+            val seconds = totalSeconds % 60
+            val trackTime = "%02d:%02d".format(minutes, seconds)
+            Track(
+                trackName = trackDto.trackName,
+                artistName = trackDto.artistName,
+                trackTime = trackTime,
+                artworkUrl = trackDto.artworkUrl100,
+                playlistId = trackDto.playlistId,
+                id = trackDto.id,
+                favorite = trackDto.favorite
+            )
         }
         database.insertTracks(tracks)
         return tracks
