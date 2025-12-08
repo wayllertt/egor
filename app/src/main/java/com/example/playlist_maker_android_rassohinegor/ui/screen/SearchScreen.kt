@@ -55,6 +55,8 @@ import com.example.playlist_maker_android_rassohinegor.ui.navigation.SearchState
 import com.example.playlist_maker_android_rassohinegor.ui.navigation.SearchViewModel
 import coil.compose.AsyncImage
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.material3.Divider
+import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun SearchRoute(
@@ -63,8 +65,10 @@ fun SearchRoute(
     viewModel: SearchViewModel = viewModel(factory = Creator.provideSearchViewModelFactory()),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val history by viewModel.history.collectAsStateWithLifecycle()
     SearchScreen(
         state = state,
+        history = history,
         onBack = onBack,
         onSearch = viewModel::search,
         onRetry = viewModel::retry,
@@ -77,6 +81,7 @@ fun SearchRoute(
 @Composable
 fun SearchScreen(
     state: SearchState,
+    history: List<String>,
     onBack: () -> Unit,
     onSearch: (String) -> Unit,
     onRetry: () -> Unit,
@@ -173,6 +178,13 @@ fun SearchScreen(
             )
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.search_field_bottom_spacing)))
+
+            if (searchQuery.isBlank() && history.isNotEmpty()) {
+                SearchHistoryList(history = history, onEntryClick = {
+                    searchQuery = it
+                    onSearch(it)
+                })
+            }
 
             when (state) {
                 SearchState.Initial -> Unit
@@ -324,4 +336,36 @@ private fun RowWithTime(
             color = MaterialTheme.colorScheme.primary,
         )
     }
+}
+
+@Composable
+private fun SearchHistoryList(history: List<String>, onEntryClick: (String) -> Unit) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.track_row_spacing))
+    ) {
+        Text(
+            text = stringResource(id = R.string.search_history_title),
+            color = colorResource(id = R.color.primary_text),
+            fontWeight = FontWeight.SemiBold,
+        )
+        history.forEachIndexed { index, entry ->
+            SearchHistoryRow(entry = entry, onClick = { onEntryClick(entry) })
+            if (index < history.lastIndex) {
+                Divider(color = colorResource(id = R.color.primary_text).copy(alpha = 0.2f))
+            }
+        }
+    }
+}
+
+@Composable
+private fun SearchHistoryRow(entry: String, onClick: () -> Unit) {
+    Text(
+        text = entry,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = dimensionResource(id = R.dimen.track_row_spacing)),
+        color = colorResource(id = R.color.primary_text),
+        textAlign = TextAlign.Start,
+    )
 }

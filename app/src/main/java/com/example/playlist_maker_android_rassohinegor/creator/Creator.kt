@@ -21,6 +21,8 @@ object Creator {
     private var database: AppDatabase? = null
     private var searchHistoryRepository: SearchHistoryRepository? = null
 
+    private val networkClient by lazy { RetrofitNetworkClient() }
+
     private val tracksRepository: TracksRepository by lazy {
         TracksRepositoryImpl(networkClient, requireDatabase())
     }
@@ -48,7 +50,10 @@ object Creator {
         searchHistoryRepository ?: error("Creator is not initialized. Call init(context) first.")
 
     fun provideSearchViewModelFactory(): ViewModelProvider.Factory {
-        return SearchViewModelFactory(tracksRepository)
+        return SearchViewModelFactory(
+            historyRepository = provideSearchHistoryRepository(),
+            repository = tracksRepository
+        )
     }
 
     fun provideTracksViewModelFactory(): TracksViewModelFactory {
