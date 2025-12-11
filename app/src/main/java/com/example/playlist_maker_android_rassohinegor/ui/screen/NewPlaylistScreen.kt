@@ -182,8 +182,8 @@ fun NewPlaylistScreen(
                     onValueChange = { name = it },
                     label = { Text(text = stringResource(id = R.string.playlist_name_label)) },
                     modifier = Modifier.fillMaxWidth(),
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color.White
+                    colors = TextFieldDefaults.colors(
+                        Color.White
                     )
                 )
                 TextField(
@@ -191,8 +191,8 @@ fun NewPlaylistScreen(
                     onValueChange = { description = it },
                     label = { Text(text = stringResource(id = R.string.playlist_description_label)) },
                     modifier = Modifier.fillMaxWidth(),
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color.White
+                    colors = TextFieldDefaults.colors(
+                        Color.White
                     )
                 )
             }
