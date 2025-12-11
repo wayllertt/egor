@@ -73,10 +73,14 @@ fun PlaylistsScreen(
     Scaffold(
         containerColor = colorResource(id = R.color.screen_background),
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddNewPlaylist) {
+            FloatingActionButton(onClick = onAddNewPlaylist,
+                containerColor = colorResource(id = R.color.grey)) {
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(id = R.string.add_playlist)
+                    contentDescription = stringResource(id = R.string.add_playlist),
+                    tint = colorResource(id = R.color.white),
+                    //colorFilter = ColorFilter.tint(colorResource(id = R.color.grey))
+                    //android.R.color()
                 )
             }
         },
@@ -91,6 +95,8 @@ fun PlaylistsScreen(
                         )
                     }
                 },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = colorResource(id = R.color.screen_background))
             )
         }
     ) { innerPadding ->
@@ -193,10 +199,10 @@ fun PlaylistListItem(
         }
         Column(modifier = Modifier.weight(1f)) {
             Text(text = playlist.name, color = colorResource(id = R.color.primary_text))
-            Text(
-                text = playlist.description,
-                color = colorResource(id = R.color.primary_text).copy(alpha = 0.7f)
-            )
+//            Text(
+//                text = playlist.description,
+//                color = colorResource(id = R.color.primary_text).copy(alpha = 0.7f)
+//            )
             Text(
                 text = stringResource(id = R.string.playlist_tracks_count, playlist.tracks.size),
                 color = colorResource(id = R.color.primary_text)

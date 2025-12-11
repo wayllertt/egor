@@ -38,8 +38,8 @@
     <string name="error_loading_tracks">Ошибка загрузки</string>
     <string name="retry">Повторить</string>
 
-    <string name="favorites_title">Избранное</string>
-    <string name="favorites_empty">Список избранного пока пуст</string>
+    <string name="favorites_title">Избранные треки</string>
+    <string name="favorites_empty">Ваша медиатека пуста</string>
     <string name="theme_dark_mode">Тёмная тема</string>
 
     <string name="add_playlist">Добавить плейлист</string>
