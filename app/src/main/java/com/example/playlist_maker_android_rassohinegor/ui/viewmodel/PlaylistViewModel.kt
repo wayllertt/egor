@@ -30,7 +30,3 @@ class PlaylistViewModel(
         }
     }
 }
-
-sealed interface PlaylistEvent {
-    data object Deleted : PlaylistEvent
-}
