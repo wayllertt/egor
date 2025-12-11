@@ -1,19 +1,24 @@
 package com.example.playlist_maker_android_rassohinegor.ui.screen
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.PlaylistPlay
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -31,19 +36,26 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.playlist_maker_android_rassohinegor.R
 import com.example.playlist_maker_android_rassohinegor.creator.Creator
+import com.example.playlist_maker_android_rassohinegor.domain.model.Playlist
 import com.example.playlist_maker_android_rassohinegor.domain.model.Track
 import com.example.playlist_maker_android_rassohinegor.ui.viewmodel.TrackDetailsViewModel
 import kotlinx.coroutines.launch
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -143,17 +155,15 @@ fun TrackDetailsScreen(
                             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.track_row_spacing))
                         ) {
                             items(state.playlists) { playlist ->
-                                Text(
-                                    text = playlist.name,
-                                    color = colorResource(id = R.color.primary_text),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            viewModel.addToPlaylist(playlist.id)
-                                            scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                                showSheet = false
-                                            }
+                                PlaylistSheetRow(
+                                    playlist = playlist,
+                                    onClick = {
+                                        viewModel.addToPlaylist(playlist.id)
+                                        scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                            showSheet = false
                                         }
+
+                                    }
                                 )
                             }
                         }
@@ -163,6 +173,59 @@ fun TrackDetailsScreen(
         }
     }
 }
+@Composable
+private fun PlaylistSheetRow(
+    playlist: Playlist,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = dimensionResource(id = R.dimen.track_row_padding_vertical)),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.drawer_item_icon_spacing))
+    ) {
+        if (playlist.coverImageUri != null) {
+            AsyncImage(
+                model = Uri.parse(playlist.coverImageUri),
+                contentDescription = stringResource(id = R.string.playlist_cover),
+                modifier = Modifier
+                    .size(dimensionResource(id = R.dimen.track_cover_size))
+                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.search_result_corner_radius))),
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(id = R.drawable.ic_music),
+                error = painterResource(id = R.drawable.ic_music)
+            )
+        } else {
+            Icon(
+                imageVector = Icons.Filled.PlaylistPlay,
+                contentDescription = stringResource(id = R.string.playlist_cover),
+                tint = colorResource(id = R.color.primary_text),
+                modifier = Modifier.size(dimensionResource(id = R.dimen.track_cover_size))
+            )
+        }
+
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                text = playlist.name,
+                color = colorResource(id = R.color.primary_text),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                fontSize = 18.sp
+            )
+            Text(
+                text = stringResource(id = R.string.playlist_tracks_count, playlist.tracks.size),
+                color = colorResource(id = R.color.grey),
+                fontSize = 14.sp
+            )
+        }
+    }
+}
+
 
 @Composable
 private fun RowActions(
