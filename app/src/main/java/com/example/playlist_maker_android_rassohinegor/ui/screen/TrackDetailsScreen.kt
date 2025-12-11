@@ -1,11 +1,13 @@
 package com.example.playlist_maker_android_rassohinegor.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -30,10 +32,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.playlist_maker_android_rassohinegor.R
 import com.example.playlist_maker_android_rassohinegor.creator.Creator
 import com.example.playlist_maker_android_rassohinegor.domain.model.Track
@@ -93,6 +98,18 @@ fun TrackDetailsScreen(
                     .padding(dimensionResource(id = R.dimen.screen_padding)),
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.track_row_spacing))
             ) {
+                AsyncImage(
+                    model = track.artworkUrl,
+                    contentDescription = stringResource(id = R.string.playlist_cover),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                        .background(colorResource(id = R.color.screen_background))
+                        .padding(bottom = dimensionResource(id = R.dimen.track_row_spacing)),
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(id = R.drawable.ic_music),
+                    error = painterResource(id = R.drawable.ic_music),
+                )
                 Text(text = track.trackName, color = colorResource(id = R.color.primary_text))
                 Text(
                     text = stringResource(id = R.string.track_artist_time, track.artistName, track.trackTime),

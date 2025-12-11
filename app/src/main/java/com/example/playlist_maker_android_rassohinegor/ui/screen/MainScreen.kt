@@ -51,7 +51,8 @@ fun MainScreen(
     onOpenSearch: () -> Unit,
     onOpenFavorites: () -> Unit,
     onOpenSettings: () -> Unit,
-    onOpenPlaylists: () -> Unit
+    onOpenPlaylists: () -> Unit,
+    onCreatePlaylist: () -> Unit,
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
@@ -94,7 +95,7 @@ fun MainScreen(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { showBottomSheet = true },
+                onClick = onCreatePlaylist,
                 containerColor = colorResource(id = R.color.main_header_background),
                 contentColor = colorResource(id = R.color.main_header_text)
             ) {

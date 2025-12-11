@@ -54,6 +54,9 @@ import coil.compose.AsyncImage
 import com.example.playlist_maker_android_rassohinegor.R
 import com.example.playlist_maker_android_rassohinegor.creator.Creator
 import com.example.playlist_maker_android_rassohinegor.ui.viewmodel.NewPlaylistViewModel
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.material3.TextFieldDefaults
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -128,57 +131,71 @@ fun NewPlaylistScreen(
                 .padding(innerPadding)
                 .padding(dimensionResource(id = R.dimen.screen_padding))
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(
-                dimensionResource(id = R.dimen.track_row_spacing)
-            )
         ) {
-            Text(
-                text = stringResource(id = R.string.select_image),
-                color = colorResource(id = R.color.primary_text)
-            )
-            Box(
+            Column(
                 modifier = Modifier
-                    .size(dimensionResource(id = R.dimen.playlist_cover_size))
-                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.header_corner_radius)))
-                    .background(colorResource(id = R.color.screen_background).copy(alpha = 0.1f))
-                    .clickable { requestImage() },
-                contentAlignment = Alignment.Center
+                    .weight(1f)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(
+                    dimensionResource(id = R.dimen.track_row_spacing)
+                )
             ) {
-                if (coverImageUri != null) {
-                    AsyncImage(
-                        model = Uri.parse(coverImageUri),
-                        contentDescription = stringResource(id = R.string.playlist_cover),
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop,
-                        placeholder = painterResource(id = R.drawable.ic_music),
-                        error = painterResource(id = R.drawable.ic_music),
-                    )
-                } else {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_music),
-                        contentDescription = stringResource(id = R.string.playlist_cover),
-                        colorFilter = ColorFilter.tint(colorResource(id = R.color.primary_text)),
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.Transparent),
-                    )
+                Text(
+                    text = stringResource(id = R.string.select_image),
+                    color = colorResource(id = R.color.primary_text)
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                        .clip(RoundedCornerShape(dimensionResource(id = R.dimen.header_corner_radius)))
+                        .background(colorResource(id = R.color.screen_background).copy(alpha = 0.1f))
+                        .clickable { requestImage() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (coverImageUri != null) {
+                        AsyncImage(
+                            model = Uri.parse(coverImageUri),
+                            contentDescription = stringResource(id = R.string.playlist_cover),
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop,
+                            placeholder = painterResource(id = R.drawable.ic_music),
+                            error = painterResource(id = R.drawable.ic_music),
+                        )
+                    } else {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_music),
+                            contentDescription = stringResource(id = R.string.playlist_cover),
+                            colorFilter = ColorFilter.tint(colorResource(id = R.color.primary_text)),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color.Transparent),
+                            contentScale = ContentScale.Crop,
+                        )
+                    }
                 }
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.track_row_spacing)))
+
+                TextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text(text = stringResource(id = R.string.playlist_name_label)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.White
+                    )
+                )
+                TextField(
+                    value = description,
+                    onValueChange = { description = it },
+                    label = { Text(text = stringResource(id = R.string.playlist_description_label)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.White
+                    )
+                )
             }
-
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.track_row_spacing)))
-
-            TextField(
-                value = name,
-                onValueChange = { name = it },
-                label = { Text(text = stringResource(id = R.string.playlist_name_label)) },
-                modifier = Modifier.fillMaxWidth()
-            )
-            TextField(
-                value = description,
-                onValueChange = { description = it },
-                label = { Text(text = stringResource(id = R.string.playlist_description_label)) },
-                modifier = Modifier.fillMaxWidth()
-            )
             Button(
                 onClick = {
                     viewModel.createNewPlaylist(name, description)

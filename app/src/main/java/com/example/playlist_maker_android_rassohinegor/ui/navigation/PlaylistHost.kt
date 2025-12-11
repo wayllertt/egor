@@ -71,6 +71,7 @@ fun PlaylistHost(
                 onOpenFavorites = navigateToFavorites,
                 onOpenSettings = navigateToSettings,
                 onOpenPlaylists = navigateToPlaylists,
+                onCreatePlaylist = navigateToNewPlaylist,
             )
         }
         composable(AppScreen.Search.route) { SearchRoute(onBack = navigateUp, onTrackClick = navigateToTrackDetails) }
