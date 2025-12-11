@@ -8,6 +8,7 @@ fun PlaylistWithTracks.toDomain(): Playlist = Playlist(
     id = playlist.id,
     name = playlist.name,
     description = playlist.description,
+    coverImageUri = playlist.coverImageUri,
     tracks = tracks.map { it.toDomain() },
 )
 
@@ -15,5 +16,6 @@ fun PlaylistEntity.toDomain(): Playlist = Playlist(
     id = id,
     name = name,
     description = description,
+    coverImageUri = coverImageUri,
     tracks = emptyList(),
 )

@@ -24,7 +24,7 @@ class LibraryViewModel(
 
     fun createNewPlaylist(namePlaylist: String, description: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            playlistsRepository.addNewPlaylist(namePlaylist, description)
+            playlistsRepository.addNewPlaylist(namePlaylist, description, null)
         }
     }
 

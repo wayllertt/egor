@@ -1,21 +1,24 @@
 package com.example.playlist_maker_android_rassohinegor.ui.screen
 
+import android.net.Uri
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,6 +32,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -112,24 +117,51 @@ fun PlaylistListItem(
     playlist: Playlist,
     onClick: () -> Unit,
 ) {
-    Column(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
             .padding(
                 horizontal = dimensionResource(id = R.dimen.screen_padding),
                 vertical = dimensionResource(id = R.dimen.track_row_padding_vertical)
-            )
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.track_row_padding_horizontal))
     ) {
-        Text(text = playlist.name, color = colorResource(id = R.color.primary_text))
-        Text(
-            text = playlist.description,
-            color = colorResource(id = R.color.primary_text).copy(alpha = 0.7f)
-        )
-        Text(
-            text = stringResource(id = R.string.playlist_tracks_count, playlist.tracks.size),
-            color = colorResource(id = R.color.primary_text)
-        )
+        Box(
+            modifier = Modifier
+                .size(dimensionResource(id = R.dimen.track_cover_size))
+                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.header_corner_radius)))
+        ) {
+            if (playlist.coverImageUri != null) {
+                AsyncImage(
+                    model = Uri.parse(playlist.coverImageUri),
+                    contentDescription = playlist.name,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(id = R.drawable.ic_music),
+                    error = painterResource(id = R.drawable.ic_music),
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_music),
+                    contentDescription = playlist.name,
+                    colorFilter = ColorFilter.tint(colorResource(id = R.color.primary_text)),
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
+        Column(modifier = Modifier.weight(1f)) {
+            Text(text = playlist.name, color = colorResource(id = R.color.primary_text))
+            Text(
+                text = playlist.description,
+                color = colorResource(id = R.color.primary_text).copy(alpha = 0.7f)
+            )
+            Text(
+                text = stringResource(id = R.string.playlist_tracks_count, playlist.tracks.size),
+                color = colorResource(id = R.color.primary_text)
+            )
+        }
     }
 }
 
@@ -190,14 +222,27 @@ fun PlaylistScreen(
                         .padding(vertical = dimensionResource(id = R.dimen.track_row_padding_vertical)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_music),
-                        contentDescription = null,
-                        tint = colorResource(id = R.color.primary_text),
-                        modifier = Modifier
-                            .size(dimensionResource(id = R.dimen.playlist_cover_size))
-                            .clip(RoundedCornerShape(dimensionResource(id = R.dimen.header_corner_radius)))
-                    )
+                    if (playlist.coverImageUri != null) {
+                        AsyncImage(
+                            model = Uri.parse(playlist.coverImageUri),
+                            contentDescription = stringResource(id = R.string.playlist_cover),
+                            modifier = Modifier
+                                .size(dimensionResource(id = R.dimen.playlist_cover_size))
+                                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.header_corner_radius))),
+                            contentScale = ContentScale.Crop,
+                            placeholder = painterResource(id = R.drawable.ic_music),
+                            error = painterResource(id = R.drawable.ic_music),
+                        )
+                    } else {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_music),
+                            contentDescription = stringResource(id = R.string.playlist_cover),
+                            colorFilter = ColorFilter.tint(colorResource(id = R.color.primary_text)),
+                            modifier = Modifier
+                                .size(dimensionResource(id = R.dimen.playlist_cover_size))
+                                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.header_corner_radius)))
+                        )
+                    }
                 }
 
                 Text(

@@ -16,6 +16,7 @@ import com.example.playlist_maker_android_rassohinegor.ui.tracks.TracksViewModel
 import com.example.playlist_maker_android_rassohinegor.ui.viewmodel.LibraryViewModelFactory
 import com.example.playlist_maker_android_rassohinegor.ui.viewmodel.PlaylistViewModelFactory
 import com.example.playlist_maker_android_rassohinegor.ui.viewmodel.TrackDetailsViewModelFactory
+import com.example.playlist_maker_android_rassohinegor.ui.viewmodel.NewPlaylistViewModelFactory
 
 object Creator {
     private var database: AppDatabase? = null
@@ -62,6 +63,10 @@ object Creator {
 
     fun provideLibraryViewModelFactory(): LibraryViewModelFactory {
         return LibraryViewModelFactory(playlistsRepository, tracksRepository)
+    }
+
+    fun provideNewPlaylistViewModelFactory(): NewPlaylistViewModelFactory {
+        return NewPlaylistViewModelFactory(playlistsRepository)
     }
 
     fun providePlaylistViewModelFactory(playlistId: Long): PlaylistViewModelFactory {

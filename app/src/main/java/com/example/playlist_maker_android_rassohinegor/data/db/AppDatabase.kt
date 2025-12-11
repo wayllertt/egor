@@ -11,7 +11,7 @@ import com.example.playlist_maker_android_rassohinegor.data.db.entity.TrackEntit
 
 @Database(
     entities = [TrackEntity::class, PlaylistEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -24,7 +24,8 @@ abstract class AppDatabase : RoomDatabase() {
                 context.applicationContext,
                 AppDatabase::class.java,
                 "playlist-maker-db",
-            ).build()
+            ).fallbackToDestructiveMigration()
+                .build()
         }
     }
 }
