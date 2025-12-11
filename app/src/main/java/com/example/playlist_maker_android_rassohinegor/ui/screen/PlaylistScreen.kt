@@ -1,8 +1,10 @@
 package com.example.playlist_maker_android_rassohinegor.ui.screen
 
 import android.net.Uri
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,17 +20,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,9 +56,10 @@ import com.example.playlist_maker_android_rassohinegor.creator.Creator
 import com.example.playlist_maker_android_rassohinegor.domain.model.Playlist
 import com.example.playlist_maker_android_rassohinegor.domain.model.Track
 import com.example.playlist_maker_android_rassohinegor.ui.viewmodel.LibraryViewModel
+import com.example.playlist_maker_android_rassohinegor.ui.viewmodel.PlaylistEvent
 import com.example.playlist_maker_android_rassohinegor.ui.viewmodel.PlaylistViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun PlaylistsScreen(
     onBack: () -> Unit,
@@ -58,6 +68,7 @@ fun PlaylistsScreen(
     viewModel: LibraryViewModel = viewModel(factory = Creator.provideLibraryViewModelFactory())
 ) {
     val playlists by viewModel.playlists.collectAsState()
+    var playlistToDelete by remember { mutableStateOf<Playlist?>(null) }
 
     Scaffold(
         containerColor = colorResource(id = R.color.screen_background),
@@ -104,11 +115,39 @@ fun PlaylistsScreen(
                 items(playlists) { playlist ->
                     PlaylistListItem(
                         playlist = playlist,
-                        onClick = { onPlaylistClick(playlist.id) }
+                        onClick = { onPlaylistClick(playlist.id) },
+                        onLongClick = { playlistToDelete = playlist }
                     )
                 }
             }
         }
+    }
+    playlistToDelete?.let { playlist ->
+        AlertDialog(
+            onDismissRequest = { playlistToDelete = null },
+            title = { Text(text = stringResource(id = R.string.delete_playlist)) },
+            text = {
+                Text(
+                    text = stringResource(
+                        id = R.string.delete_playlist_confirmation,
+                        playlist.name
+                    )
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.deletePlaylistById(playlist.id)
+                    playlistToDelete = null
+                }) {
+                    Text(text = stringResource(id = R.string.delete))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { playlistToDelete = null }) {
+                    Text(text = stringResource(id = R.string.cancel))
+                }
+            }
+        )
     }
 }
 
@@ -116,11 +155,12 @@ fun PlaylistsScreen(
 fun PlaylistListItem(
     playlist: Playlist,
     onClick: () -> Unit,
+    onLongClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick)
             .padding(
                 horizontal = dimensionResource(id = R.dimen.screen_padding),
                 vertical = dimensionResource(id = R.dimen.track_row_padding_vertical)
@@ -174,6 +214,16 @@ fun PlaylistScreen(
 ) {
     val playlistState by viewModel.playlist.collectAsState()
 
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(viewModel) {
+        viewModel.events.collect { event ->
+            when (event) {
+                PlaylistEvent.Deleted -> onBack()
+            }
+        }
+    }
+
     Scaffold(
         containerColor = colorResource(id = R.color.screen_background),
         topBar = {
@@ -185,6 +235,16 @@ fun PlaylistScreen(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(id = R.string.description_back)
                         )
+                    }
+                },
+                actions = {
+                    if (playlistState != null) {
+                        IconButton(onClick = { showDeleteDialog = true }) {
+                            Icon(
+                                imageVector = Icons.Filled.Delete,
+                                contentDescription = stringResource(id = R.string.delete_playlist)
+                            )
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -273,6 +333,33 @@ fun PlaylistScreen(
                     }
                 }
             }
+        }
+        if (showDeleteDialog && playlist != null) {
+            AlertDialog(
+                onDismissRequest = { showDeleteDialog = false },
+                title = { Text(text = stringResource(id = R.string.delete_playlist)) },
+                text = {
+                    Text(
+                        text = stringResource(
+                            id = R.string.delete_playlist_confirmation,
+                            playlist.name
+                        )
+                    )
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        showDeleteDialog = false
+                        viewModel.deletePlaylist()
+                    }) {
+                        Text(text = stringResource(id = R.string.delete))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showDeleteDialog = false }) {
+                        Text(text = stringResource(id = R.string.cancel))
+                    }
+                }
+            )
         }
     }
 }
