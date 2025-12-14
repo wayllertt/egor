@@ -11,7 +11,7 @@
     <string name="dev_email_to">rassokhin.e.s@edu.mirea.ru</string>
     <string name="dev_email_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="dev_email_body">Спасибо!</string>
-    <string name="offer_url">https://yandex.ru/legal/praktikum_flow_offer/07092020/</string>
+    <string name="offer_url">https://yandex.ru/legal/praktikum_flow_offer/</string>
 
     <string name="no_apps_found">Не найдено подходящих приложений</string>
     <string name="no_mail_clients">Не найден почтовый клиент</string>
