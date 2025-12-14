@@ -56,6 +56,11 @@ import com.example.playlist_maker_android_rassohinegor.creator.Creator
 import com.example.playlist_maker_android_rassohinegor.ui.viewmodel.NewPlaylistViewModel
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.material3.TextFieldDefaults
+import android.content.Context
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.UUID
 
 
 
@@ -73,7 +78,18 @@ fun NewPlaylistScreen(
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        uri?.let { viewModel.setCoverImageUri(it.toString()) }
+        uri?.let {
+            val savedUri = saveImageToInternalStorage(context, it)
+            if (savedUri != null) {
+                viewModel.setCoverImageUri(savedUri.toString())
+            } else {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.cover_save_error),
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+        }
     }
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -207,5 +223,26 @@ fun NewPlaylistScreen(
                 Text(text = stringResource(id = R.string.save_playlist))
             }
         }
+    }
+}
+
+private fun saveImageToInternalStorage(context: Context, sourceUri: Uri): Uri? {
+    return try {
+        val directory = File(context.filesDir, "playlist_covers").apply {
+            if (!exists()) {
+                mkdirs()
+            }
+        }
+        val destinationFile = File(directory, "cover_${UUID.randomUUID()}.jpg")
+
+        context.contentResolver.openInputStream(sourceUri)?.use { inputStream ->
+            FileOutputStream(destinationFile).use { outputStream ->
+                inputStream.copyTo(outputStream)
+            }
+        }
+
+        Uri.fromFile(destinationFile)
+    } catch (e: IOException) {
+        null
     }
 }

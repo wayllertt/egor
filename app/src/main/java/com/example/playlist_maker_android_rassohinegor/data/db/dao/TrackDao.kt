@@ -15,6 +15,9 @@ interface TrackDao {
     @Upsert
     suspend fun upsertTracks(tracks: List<TrackEntity>)
 
+    @Query("SELECT * FROM tracks WHERE id IN (:trackIds)")
+    suspend fun getTracksByIds(trackIds: List<Long>): List<TrackEntity>
+
     @Query("SELECT * FROM tracks WHERE id = :trackId LIMIT 1")
     fun observeTrackById(trackId: Long): Flow<TrackEntity?>
 

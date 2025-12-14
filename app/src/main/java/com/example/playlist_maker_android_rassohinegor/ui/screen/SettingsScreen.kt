@@ -115,8 +115,9 @@ fun SettingsScreen(
             SettingsActionRow(
                 text = stringResource(R.string.btn_write_to_devs),
                 onClick = {
-                    val mailUri = Uri.parse("mailto:$emailTo")
-                    val emailIntent = Intent(Intent.ACTION_SENDTO, mailUri).apply {
+                    val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                        data = Uri.parse("mailto:")
+                        putExtra(Intent.EXTRA_EMAIL, arrayOf(emailTo))
                         putExtra(Intent.EXTRA_SUBJECT, emailSubject)
                         putExtra(Intent.EXTRA_TEXT, emailBody)
                     }

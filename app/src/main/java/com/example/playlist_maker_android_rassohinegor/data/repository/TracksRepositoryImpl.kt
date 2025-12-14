@@ -29,7 +29,16 @@ class TracksRepositoryImpl(
                 throw IOException("Failed to fetch tracks")
             }
 
-            val tracks = response.results.map { trackDto ->
+            val trackDtos = response.results
+            val existingTracks = if (trackDtos.isNotEmpty()) {
+                trackDao.getTracksByIds(trackDtos.map { it.id })
+            } else {
+                emptyList()
+            }
+            val existingTracksById = existingTracks.associateBy { it.id }
+
+            val tracks = trackDtos.map { trackDto ->
+                val existingTrack = existingTracksById[trackDto.id]
                 val totalSeconds = trackDto.trackTimeMillis / 1_000
                 val minutes = totalSeconds / 60
                 val seconds = totalSeconds % 60
@@ -39,9 +48,9 @@ class TracksRepositoryImpl(
                     artistName = trackDto.artistName,
                     trackTime = trackTime,
                     artworkUrl = trackDto.artworkUrl100,
-                    playlistId = trackDto.playlistId,
+                    playlistId = existingTrack?.playlistId ?: trackDto.playlistId,
                     id = trackDto.id,
-                    favorite = trackDto.favorite
+                    favorite = existingTrack?.favorite ?: trackDto.favorite
                 )
             }
             trackDao.upsertTracks(tracks.map { it.toEntity() })
